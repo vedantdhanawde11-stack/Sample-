@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>गाडी लाईव्ह ट्रॅकिंग | बाळूमामा टूर्स आणि ट्रॅव्हल्स</title>
+  
+  <link rel="icon" type="image/png" href="https://www.dropbox.com/scl/fi/hre9yos6r0pfnc8xjstlz/1787043134496.png?rlkey=kej6l3d66mod16vqpnotd2129&st=e2g9y5gr&raw=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto Sans Devanagari:wght@400;700&family=Times New Roman:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Leaflet Free Map (100% Free & No API Key Required) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <style>
+    :root {
+      --gold-bright: #ffea00;
+      --cyan-neon: #00f0ff;
+      --green-emerald: #22c55e;
+      --red-alert: #ef4444;
+      --font-marathi: 'Noto Sans Devanagari', cursive, sans-serif;
+      --font-english: 'Times New Roman', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-marathi); -webkit-tap-highlight-color: transparent; }
+    body, html { width: 100%; height: 100%; overflow: hidden; background: #0f172a; }
+    .eng-num { font-family: var(--font-english) !important; }
+
+    #live-map { width: 100%; height: 100%; z-index: 1; }
+
+    /* फ्लोटिंग टॉप बार */
+    .top-floating-bar {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1.5px solid var(--gold-bright);
+      backdrop-filter: blur(16px);
+      border-radius: 18px;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      color: #fff;
+    }
+
+    .brand-title { display: flex; align-items: center; gap: 8px; font-size: 1.15rem; color: var(--gold-bright); font-weight: 700; }
+    .brand-title img { width: 34px; height: 34px; border-radius: 8px; border: 1.5px solid var(--gold-bright); }
+
+    .id-tag {
+      background: #000;
+      color: var(--cyan-neon);
+      border: 1px solid var(--cyan-neon);
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-left: 6px;
+    }
+
+    /* फ्लोटिंग बॉटम इन्फो कार्ड */
+    .bottom-floating-card {
+      position: absolute;
+      bottom: 16px;
+      left: 14px;
+      right: 14px;
+      max-width: 500px;
+      margin: 0 auto;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.94);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 16px 18px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      color: #fff;
+    }
+
+    .trip-route-title { font-size: 1.15rem; color: var(--gold-bright); font-weight: 700; margin-bottom: 8px; }
+    
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .badge-live { background: rgba(34, 197, 94, 0.25); color: #86efac; border: 1px solid #22c55e; }
+    .badge-waiting { background: rgba(234, 179, 8, 0.25); color: #fde047; border: 1px solid #eab308; }
+
+    .driver-details-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 8px;
+      font-size: 0.92rem;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 10px;
+      margin-bottom: 12px;
+    }
+
+    .actions-grid { display: flex; gap: 8px; }
+    .btn-call {
+      flex: 1;
+      background: #22c55e;
+      color: #fff;
+      border: none;
+      padding: 11px;
+      border-radius: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+    }
+    .btn-recenter {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #fff;
+      padding: 11px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    /* कस्टम चमकणारा कार मार्कर */
+    .car-marker-icon {
+      background: var(--gold-bright);
+      color: #000;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.4rem;
+      border: 3px solid #fff;
+      box-shadow: 0 0 25px rgba(255, 234, 0, 0.9);
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- फ्लोटिंग हेडर -->
+  <div class="top-floating-bar">
+    <div class="brand-title">
+      <img src="https://www.dropbox.com/scl/fi/hre9yos6r0pfnc8xjstlz/1787043134496.png?rlkey=kej6l3d66mod16vqpnotd2129&st=e2g9y5gr&raw=1" alt="Logo">
+      <span>लाईव्ह ट्रॅकर</span>
+      <span class="id-tag eng-num" id="tag-booking-id">AV@-------</span>
+    </div>
+    <div id="live-speed-badge" class="eng-num" style="color:var(--cyan-neon); font-weight:700; font-size:1.05rem;">
+      0 km/h
+    </div>
+  </div>
+
+  <!-- Leaflet नकाशा -->
+  <div id="live-map"></div>
+
+  <!-- फ्लोटिंग ड्रायव्हर व ट्रिप कार्ड -->
+  <div class="bottom-floating-card">
+    <div class="trip-route-title" id="track-route">
+      <i class="fa-solid fa-map-location-dot"></i> ट्रिप लोड होत आहे...
+    </div>
+
+    <div>
+      <span class="status-badge badge-waiting" id="track-status-badge">
+        <i class="fa-solid fa-hourglass-half"></i> ड्रायव्हर सुरू होण्याची वाट पाहत आहे
+      </span>
+    </div>
+
+    <div class="driver-details-grid">
+      <div>👨‍✈️ <strong>ड्रायव्हर:</strong> <span id="track-driver-name">-</span></div>
+      <div>🚗 <strong>गाडी क्र.:</strong> <span id="track-car-no" class="eng-num" style="color:var(--gold-bright); font-weight:700;">-</span></div>
+    </div>
+
+    <div class="actions-grid">
+      <a href="tel:" id="btn-driver-call" class="btn-call">
+        <i class="fa-solid fa-phone"></i> ड्रायव्हरला कॉल करा
+      </a>
+      <button class="btn-recenter" onclick="centerOnCar()" title="गाडीवर फोकस करा">
+        <i class="fa-solid fa-crosshairs"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmLtQpzKq2wFg0nDZzAZyAXelGK_oNHGk",
+  authDomain: "balumama-travels.firebaseapp.com",
+  projectId: "balumama-travels",
+  storageBucket: "balumama-travels.firebasestorage.app",
+  messagingSenderId: "787861406325",
+  appId: "1:787861406325:web:f31b27bcae1cd44baaee3c",
+  measurementId: "G-N8VYSNG0VX"
+    };
+
+    let db = null;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+    } catch(e) {}
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookingId = urlParams.get('id'); // e.g. AV@0000001
+
+    if (bookingId) {
+      document.getElementById('tag-booking-id').textContent = bookingId;
+    }
+
+    // नकाशा सुरू करणे (Default Kolhapur Center)
+    const map = L.map('live-map', { zoomControl: false }).setView([16.7050, 74.2433], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const carIcon = L.divIcon({
+      className: 'custom-car-div',
+      html: '<div class="car-marker-icon"><i class="fa-solid fa-car-side"></i></div>',
+      iconSize: [44, 44],
+      iconAnchor: [22, 22]
+    });
+
+    let carMarker = null;
+    let lastCarPos = null;
+    let pathPolyline = L.polyline([], { color: '#00f0ff', weight: 4, opacity: 0.8 }).addTo(map);
+
+    if (bookingId && db) {
+      // १. बुकिंग माहिती लोड करणे
+      db.ref(`bookings/${bookingId}`).on('value', snap => {
+        if (snap.exists()) {
+          const b = snap.val();
+          document.getElementById('track-route').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${b.routeFrom} ➡️ ${b.routeTo}`;
+          document.getElementById('track-driver-name').textContent = b.driverName || 'नेमणूक बाकी';
+          document.getElementById('track-car-no').textContent = b.carNumber || b.assignedVehicle || b.vehicle || '-';
+          if (b.driverPhone) {
+            document.getElementById('btn-driver-call').href = `tel:${b.driverPhone}`;
+          }
+        }
+      });
+
+      // २. थेट GPS लोकेशन रिअल-टाइम ऐकणे
+      db.ref(`liveTracking/${bookingId}`).on('value', snap => {
+        if (snap.exists()) {
+          const t = snap.val();
+          if (t.status === 'active' && t.lat && t.lng) {
+            lastCarPos = [t.lat, t.lng];
+
+            document.getElementById('track-status-badge').className = 'status-badge badge-live';
+            document.getElementById('track-status-badge').innerHTML = '<i class="fa-solid fa-circle" style="color:#22c55e;"></i> गाडी चालू आहे (Live Moving)';
+            document.getElementById('live-speed-badge').textContent = `${t.speed || 0} km/h`;
+
+            // गाडीच्या मागे निळी रूट लाईन काढणे
+            pathPolyline.addLatLng(lastCarPos);
+
+            if (!carMarker) {
+              carMarker = L.marker([t.lat, t.lng], { icon: carIcon }).addTo(map);
+              map.setView([t.lat, t.lng], 16);
+            } else {
+              carMarker.setLatLng([t.lat, t.lng]);
+            }
+          } else if (t.status === 'ended') {
+            document.getElementById('track-status-badge').className = 'status-badge badge-waiting';
+            document.getElementById('track-status-badge').innerHTML = '✅ प्रवास पूर्ण झाला आहे';
+            document.getElementById('live-speed-badge').textContent = '0 km/h';
+          }
+        }
+      });
+    }
+
+    function centerOnCar() {
+      if (lastCarPos) {
+        map.setView(lastCarPos, 16, { animate: true });
+      } else {
+        alert('गाडीचे लाईव्ह लोकेशन अद्याप सुरू झालेले नाही.');
+      }
+    }
+  </script>
+</body>
+</html>
