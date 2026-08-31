@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>पेमेंट आणि हिशोब पोर्टल | बाळूमामा टूर्स आणि ट्रॅव्हल्स</title>
+  
+  <!-- Favicon / Logo -->
+  <link rel="icon" type="image/png" href="https://www.dropbox.com/scl/fi/hre9yos6r0pfnc8xjstlz/1787043134496.png?rlkey=kej6l3d66mod16vqpnotd2129&st=e2g9y5gr&raw=1">
+
+  <!-- Google Fonts: Noto Sans Devanagari & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Firebase SDKs (v9.23.0 Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <style>
+    :root {
+      --primary-navy: #0f2942;
+      --primary-dark: #0a1c2e;
+      --primary-light: #1e3a5f;
+      --accent-gold: #d97706;
+      --accent-gold-light: #f59e0b;
+      --accent-gold-subtle: #fef3c7;
+      
+      --bg-slate: #f8fafc;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --border-strong: #cbd5e1;
+      
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      
+      --success-green: #15803d;
+      --success-bg: #dcfce7;
+      --danger-red: #b91c1c;
+      --danger-bg: #fee2e2;
+      --info-blue: #0369a1;
+      --info-bg: #e0f2fe;
+
+      --font-marathi: 'Times New Roman', 'Noto Sans Devanagari', Times, serif;
+      --font-english: 'Inter', 'Times New Roman', Times, serif;
+      
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 10px -2px rgba(15, 41, 66, 0.06);
+      --shadow-card: 0 12px 25px -4px rgba(15, 41, 66, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-marathi);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-slate);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .eng-num {
+      font-family: var(--font-english) !important;
+      letter-spacing: 0.5px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* लॉगिन स्क्रीन */
+    .login-wrapper {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background: linear-gradient(180deg, #0a1c2e 0%, #0f2942 100%);
+    }
+    .login-box {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 36px 24px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .login-box img {
+      width: 80px;
+      height: 80px;
+      border-radius: 18px;
+      border: 2px solid var(--accent-gold);
+      margin-bottom: 14px;
+      object-fit: cover;
+    }
+    .login-input {
+      width: 100%;
+      background: #f8fafc;
+      border: 1.5px solid var(--border-strong);
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      text-align: center;
+      outline: none;
+      margin: 18px 0;
+    }
+    .btn-login {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #fff;
+      border: none;
+      width: 100%;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* हेडर */
+    .portal-header {
+      background: var(--primary-navy);
+      color: #fff;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--accent-gold);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .portal-logo-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .portal-logo-group img {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: 1.5px solid var(--accent-gold-light);
+    }
+
+    /* मुख्य लेआउट */
+    .main-container {
+      flex: 1;
+      padding: 16px;
+      max-width: 720px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* आर्थिक सारांश कार्ड्स ग्रिड */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .metric-card {
+      background: #fff;
+      border: 1.5px solid var(--border-color);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .metric-card.total { border-left: 5px solid var(--primary-navy); }
+    .metric-card.jama { border-left: 5px solid var(--success-green); }
+    .metric-card.baki { border-left: 5px solid var(--danger-red); }
+    .metric-card.topcar { border-left: 5px solid var(--accent-gold); }
+
+    .metric-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .metric-value {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    /* मोड स्विचर (कार वि. कॅलेंडर) */
+    .view-toggle-bar {
+      display: flex;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      gap: 4px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .toggle-btn.active {
+      background: #fff;
+      color: var(--primary-navy);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* स्टेटस फिल्टर */
+    .filter-pills-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .filter-pill {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1.5px solid var(--border-color);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .filter-pill.active {
+      background: var(--primary-navy);
+      color: #fff;
+      border-color: var(--primary-navy);
+    }
+
+    /* ट्रिप कार्ड्स */
+    .trip-payment-card {
+      background: #fff;
+      border: 1.5px solid var(--border-color);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .trip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .badge-paid {
+      background: var(--success-bg);
+      color: var(--success-green);
+      border: 1px solid #bbf7d0;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .badge-due {
+      background: var(--danger-bg);
+      color: var(--danger-red);
+      border: 1px solid #fecaca;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .trip-row-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .btn-action-sm {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-clear { background: #059669; color: #fff; }
+    .btn-wa-remind { background: #25d366; color: #fff; }
+    .btn-edit-pay { background: var(--info-bg); color: var(--info-blue); border: 1px solid #bae6fd; }
+
+    /* कॅलेंडर */
+    .cal-box {
+      background: #fff;
+      border: 1.5px solid var(--border-color);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .cal-header-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .cal-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+    .cal-cell-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      font-family: var(--font-english);
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-weight: 700;
+      position: relative;
+    }
+    .cal-cell-day.has-paid { background: #f0fdf4; color: var(--success-green); border-color: #bbf7d0; }
+    .cal-cell-day.has-baki { background: #fef2f2; color: var(--danger-red); border-color: #fecaca; }
+    .cal-cell-day.selected { background: var(--primary-navy) !important; color: #fff !important; }
+
+    /* मॉडेल बॉक्स */
+    .popup-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+    .popup-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 22px;
+      width: 100%;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- १. लॉगिन स्क्रीन -->
+  <section id="portal-login-view" class="login-wrapper">
+    <div class="login-box">
+      <img src="https://www.dropbox.com/scl/fi/hre9yos6r0pfnc8xjstlz/1787043134496.png?rlkey=kej6l3d66mod16vqpnotd2129&st=e2g9y5gr&raw=1" alt="Logo">
+      <h2 style="color:var(--primary-navy); font-size:1.35rem; font-weight:900;">पेमेंट आणि हिशोब पोर्टल 💳</h2>
+      <p style="color:var(--accent-gold); font-size:0.9rem; font-weight:700;">बाळूमामा टूर्स अधिकृत खातावही</p>
+      
+      <input type="password" id="pass-input" class="login-input eng-num" placeholder="पासवर्ड टाका...">
+      <button type="button" class="btn-login" onclick="loginPortal()">प्रवेश करा</button>
+    </div>
+  </section>
+
+  <!-- २. मुख्य पोर्टल हेडर -->
+  <header id="portal-header" class="portal-header hidden">
+    <div class="portal-logo-group">
+      <img src="https://www.dropbox.com/scl/fi/hre9yos6r0pfnc8xjstlz/1787043134496.png?rlkey=kej6l3d66mod16vqpnotd2129&st=e2g9y5gr&raw=1" alt="Logo">
+      <div>
+        <h3 style="font-size:1.1rem; font-weight:900;">पेमेंट आणि हिशोब पोर्टल</h3>
+        <p style="font-size:0.75rem; color:var(--accent-gold-light);">गाडी व कॅलेंडरनिहाय खातावही</p>
+      </div>
+    </div>
+    <button onclick="logoutPortal()" style="background:rgba(239,68,68,0.2); border:1px solid rgba(239,68,68,0.5); color:#fca5a5; padding:6px 12px; border-radius:8px; font-weight:700; cursor:pointer;">
+      <i class="fa-solid fa-right-from-bracket"></i> बाहेर
+    </button>
+  </header>
+
+  <!-- ३. मुख्य पोर्टल ॲप -->
+  <main id="portal-app" class="main-container hidden">
+
+    <!-- आर्थिक सारांश कार्ड्स -->
+    <section class="metrics-grid">
+      <div class="metric-card total">
+        <div class="metric-label">💰 एकूण व्यवसाय (Turnover)</div>
+        <div class="metric-value eng-num" id="stat-turnover">₹ 0</div>
+      </div>
+      <div class="metric-card jama">
+        <div class="metric-label">✅ एकूण जमा रक्कम (Jama)</div>
+        <div class="metric-value eng-num" style="color:var(--success-green);" id="stat-jama">₹ 0</div>
+      </div>
+      <div class="metric-card baki">
+        <div class="metric-label">⏳ एकूण बाकी येणे (Pending)</div>
+        <div class="metric-value eng-num" style="color:var(--danger-red);" id="stat-baki">₹ 0</div>
+      </div>
+      <div class="metric-card topcar">
+        <div class="metric-label">🚗 सर्वाधिक कमाई गाडी</div>
+        <div class="metric-value" style="font-size:1rem; color:var(--accent-gold);" id="stat-topcar">-</div>
+      </div>
+    </section>
+
+    <!-- व्ह्यू स्विचर: गाडीनुसार vs कॅलेंडरनुसार -->
+    <div class="view-toggle-bar">
+      <button class="toggle-btn active" id="btn-view-car" onclick="switchView('car')">
+        <i class="fa-solid fa-car"></i> गाडीनुसार हिशोब
+      </button>
+      <button class="toggle-btn" id="btn-view-cal" onclick="switchView('calendar')">
+        <i class="fa-solid fa-calendar-days"></i> कॅलेंडरनुसार हिशोब
+      </button>
+    </div>
+
+    <!-- स्टेटस फिल्टर पिल्स -->
+    <div class="filter-pills-row">
+      <button class="filter-pill active" onclick="setFilter('all', this)">सर्व ट्रिप्स (All)</button>
+      <button class="filter-pill" onclick="setFilter('due', this)">⏳ बाकी शिल्लक (Pending Dues)</button>
+      <button class="filter-pill" onclick="setFilter('paid', this)">✅ पूर्ण जमा (Full Paid)</button>
+    </div>
+
+    <!-- व्ह्यू १: गाडीनुसार खातावही -->
+    <section id="view-car-section">
+      <div class="metric-card" style="margin-bottom:14px;">
+        <label style="font-weight:800; font-size:0.9rem; color:var(--primary-navy); margin-bottom:6px; display:block;">
+          <i class="fa-solid fa-car-side" style="color:var(--accent-gold);"></i> गाडी निवडा:
+        </label>
+        <select id="car-select-dropdown" class="login-input eng-num" style="margin:0; padding:10px;" onchange="renderCarTrips()">
+          <option value="ALL">सर्व गाड्या (All Vehicles)</option>
+        </select>
+      </div>
+
+      <div id="car-trips-list">
+        <p style="text-align:center; color:var(--text-muted); padding:20px;">माहिती लोड होत आहे...</p>
+      </div>
+    </section>
+
+    <!-- व्ह्यू २: कॅलेंडरनुसार खातावही -->
+    <section id="view-cal-section" class="hidden">
+      <div class="cal-box">
+        <div class="cal-header-controls">
+          <button class="filter-pill" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+          <h3 id="cal-month-title" style="color:var(--primary-navy); font-weight:800; font-size:1.1rem;">ऑगस्ट 2026</h3>
+          <button class="filter-pill" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-weight:700; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">
+          <span>रवि</span><span>सोम</span><span>मंगळ</span><span>बुध</span><span>गुरु</span><span>शुक्र</span><span>शनि</span>
+        </div>
+
+        <div class="cal-days-grid" id="calendar-days-container"></div>
+      </div>
+
+      <h4 id="selected-date-title" style="color:var(--primary-navy); font-weight:800; margin-bottom:10px;">
+        <i class="fa-solid fa-calendar-check" style="color:var(--accent-gold);"></i> निवडलेल्या तारखेचे पेमेंट्स
+      </h4>
+      <div id="cal-date-trips-list">
+        <p style="color:var(--text-muted);">तारीख निवडा...</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- पेमेंट बदल किंवा जमा करण्याचे पॉपअप मॉडेल -->
+  <div id="payment-modal" class="popup-modal hidden">
+    <div class="popup-card">
+      <h3 style="color:var(--primary-navy); font-size:1.15rem; font-weight:800; margin-bottom:12px;">
+        <i class="fa-solid fa-money-bill-wave" style="color:var(--success-green);"></i> पेमेंट अपडेट करा
+      </h3>
+      <input type="hidden" id="modal-trip-key">
+
+      <div style="font-size:0.9rem; margin-bottom:12px; color:var(--text-muted);">
+        <p>🆔 <strong id="modal-trip-id" class="eng-num">-</strong> | ग्राहक: <strong id="modal-cust-name">-</strong></p>
+        <p>💰 एकूण अंतिम भाडे: <strong id="modal-final-fare" class="eng-num" style="color:var(--primary-navy);">-</strong></p>
+      </div>
+
+      <label style="font-size:0.85rem; font-weight:700; color:var(--text-main);">नवीन जमा रक्कम टाका (₹):</label>
+      <input type="number" id="modal-jama-input" class="login-input eng-num" style="margin:6px 0 14px 0; padding:10px;" placeholder="उदा. 4000">
+
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn-action-sm btn-clear" onclick="saveUpdatedPayment()"><i class="fa-solid fa-check"></i> सेव्ह करा</button>
+        <button type="button" class="btn-action-sm" style="background:#e2e8f0; color:var(--text-main);" onclick="closePaymentModal()">रद्द</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Engine -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmLtQpzKq2wFg0nDZzAZyAXelGK_oNHGk",
+      authDomain: "balumama-travels.firebaseapp.com",
+      projectId: "balumama-travels",
+      storageBucket: "balumama-travels.firebasestorage.app",
+      messagingSenderId: "787861406325",
+      appId: "1:787861406325:web:f31b27bcae1cd44baaee3c",
+      measurementId: "G-N8VYSNG0VX"
+    };
+
+    let db = null;
+    try {
+      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+      } else if (typeof firebase !== 'undefined' && firebase.apps.length) {
+        db = firebase.database();
+      }
+    } catch(e) {
+      console.warn("Firebase Init Error:", e);
+    }
+
+    const marathiMonths = ['जानेवारी', 'फेब्रुवारी', 'मार्च', 'एप्रिल', 'मे', 'जून', 'जुलै', 'ऑगस्ट', 'सप्टेंबर', 'ऑक्टोबर', 'नोव्हेंबर', 'डिसेंबर'];
+
+    const state = {
+      bookings: {},
+      vehicles: {},
+      activeView: 'car', // 'car' | 'calendar'
+      statusFilter: 'all', // 'all' | 'due' | 'paid'
+      calYear: 2026,
+      calMonth: 7, // August
+      selectedDateStr: null
+    };
+
+    // 🔊 साउंड इफेक्ट्स (Web Audio API)
+    function playChime(isSuccess = true) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = isSuccess ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(isSuccess ? 880 : 440, now);
+        if (isSuccess) osc.frequency.exponentialRampToValueAtTime(1320, now + 0.15);
+
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } catch(e) {}
+    }
+
+    // लॉगिन पडताळणी
+    function loginPortal() {
+      const pass = document.getElementById('pass-input')?.value.trim();
+      if (pass === "Balumama@1234" || pass === "Aarti@2503") {
+        sessionStorage.setItem('balumama_payment_portal_auth', 'true');
+        playChime(true);
+        initPortal();
+      } else {
+        alert("चुकीचा पासवर्ड! कृपया योग्य पासवर्ड टाका.");
+      }
+    }
+
+    function logoutPortal() {
+      sessionStorage.removeItem('balumama_payment_portal_auth');
+      document.getElementById('portal-header').classList.add('hidden');
+      document.getElementById('portal-app').classList.add('hidden');
+      document.getElementById('portal-login-view').classList.remove('hidden');
+      document.getElementById('pass-input').value = '';
+    }
+
+    function checkSession() {
+      if (sessionStorage.getItem('balumama_payment_portal_auth') === 'true') {
+        initPortal();
+      }
+    }
+
+    function initPortal() {
+      document.getElementById('portal-login-view').classList.add('hidden');
+      document.getElementById('portal-header').classList.remove('hidden');
+      document.getElementById('portal-app').classList.remove('hidden');
+
+      if (db) {
+        db.ref('vehicles').on('value', s => {
+          state.vehicles = s.exists() ? s.val() : {};
+          populateCarDropdown();
+        });
+
+        db.ref('bookings').on('value', s => {
+          state.bookings = s.exists() ? s.val() : {};
+          computeMetrics();
+          if (state.activeView === 'car') renderCarTrips();
+          if (state.activeView === 'calendar') renderCalendar();
+        });
+      }
+    }
+
+    // आकडेमोड व मेट्रिक्स
+    function computeMetrics() {
+      let totalTurnover = 0;
+      let totalJama = 0;
+      let totalBaki = 0;
+      const carEarnings = {};
+
+      Object.keys(state.bookings || {}).forEach(k => {
+        const b = state.bookings[k];
+        if (b.status === 'cancelled') return;
+
+        const fareNum = parseInt(String(b.finalFare || b.totalFare || '0').replace(/[^0-9]/g, '')) || 0;
+        const jamaNum = parseInt(String(b.jamaAmount || '0').replace(/[^0-9]/g, '')) || 0;
+        const bakiNum = parseInt(String(b.bakiAmount || '0').replace(/[^0-9]/g, '')) || 0;
+
+        totalTurnover += fareNum;
+        totalJama += (b.isPaymentCleared ? fareNum : jamaNum);
+        totalBaki += (b.isPaymentCleared ? 0 : bakiNum);
+
+        const carName = b.vehicle || b.carNumber || 'गाडी';
+        carEarnings[carName] = (carEarnings[carName] || 0) + fareNum;
+      });
+
+      document.getElementById('stat-turnover').textContent = `₹ ${totalTurnover.toLocaleString('en-IN')}`;
+      document.getElementById('stat-jama').textContent = `₹ ${totalJama.toLocaleString('en-IN')}`;
+      document.getElementById('stat-baki').textContent = `₹ ${totalBaki.toLocaleString('en-IN')}`;
+
+      let topCar = "-";
+      let maxEarn = 0;
+      Object.keys(carEarnings).forEach(c => {
+        if (carEarnings[c] > maxEarn) {
+          maxEarn = carEarnings[c];
+          topCar = c;
+        }
+      });
+      document.getElementById('stat-topcar').textContent = topCar;
+    }
+
+    function populateCarDropdown() {
+      const select = document.getElementById('car-select-dropdown');
+      if (!select) return;
+      const currentVal = select.value;
+      select.innerHTML = '<option value="ALL">सर्व गाड्या (All Vehicles)</option>';
+
+      Object.keys(state.vehicles || {}).forEach(vk => {
+        const v = state.vehicles[vk];
+        select.innerHTML += `<option value="${v.number || v.name}">${v.name} (${v.number || ''})</option>`;
+      });
+      select.value = currentVal || 'ALL';
+    }
+
+    function switchView(view) {
+      state.activeView = view;
+      document.getElementById('btn-view-car').classList.toggle('active', view === 'car');
+      document.getElementById('btn-view-cal').classList.toggle('active', view === 'calendar');
+      document.getElementById('view-car-section').classList.toggle('hidden', view !== 'car');
+      document.getElementById('view-cal-section').classList.toggle('hidden', view !== 'calendar');
+
+      if (view === 'car') renderCarTrips();
+      if (view === 'calendar') renderCalendar();
+    }
+
+    function setFilter(filterType, el) {
+      state.statusFilter = filterType;
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      if (el) el.classList.add('active');
+
+      if (state.activeView === 'car') renderCarTrips();
+      if (state.activeView === 'calendar') renderSelectedDateTrips();
+    }
+
+    // व्ह्यू १: गाडीनुसार ट्रिप यादी
+    function renderCarTrips() {
+      const container = document.getElementById('car-trips-list');
+      const selectedCar = document.getElementById('car-select-dropdown')?.value || 'ALL';
+      if (!container) return;
+
+      const keys = Object.keys(state.bookings || {});
+      const filteredKeys = keys.filter(k => {
+        const b = state.bookings[k];
+        if (b.status === 'cancelled') return false;
+
+        // Car Filter
+        if (selectedCar !== 'ALL') {
+          const match = (b.vehicle && b.vehicle.includes(selectedCar)) || (b.carNumber && b.carNumber.includes(selectedCar));
+          if (!match) return false;
+        }
+
+        // Status Filter
+        const bakiNum = parseInt(String(b.bakiAmount || '0').replace(/[^0-9]/g, '')) || 0;
+        const isPaid = (b.isPaymentCleared === true) || (bakiNum === 0);
+
+        if (state.statusFilter === 'due' && isPaid) return false;
+        if (state.statusFilter === 'paid' && !isPaid) return false;
+
+        return true;
+      });
+
+      if (filteredKeys.length === 0) {
+        container.innerHTML = '<div class="trip-payment-card" style="text-align:center; color:var(--text-muted); padding:20px;">कोणत्याही नोंदी आढळल्या नाहीत.</div>';
+        return;
+      }
+
+      container.innerHTML = '';
+      filteredKeys.reverse().forEach(key => {
+        const b = state.bookings[key];
+        const card = createTripPaymentCard(key, b);
+        container.appendChild(card);
+      });
+    }
+
+    function createTripPaymentCard(key, b) {
+      const card = document.createElement('div');
+      card.className = 'trip-payment-card';
+
+      const fareStr = b.finalFare || b.totalFare || '₹ 0';
+      const jamaStr = b.jamaAmount || '₹ 0';
+      const bakiStr = b.bakiAmount || '₹ 0';
+      const bakiNum = parseInt(String(bakiStr).replace(/[^0-9]/g, '')) || 0;
+      const isPaid = (b.isPaymentCleared === true) || (bakiNum === 0);
+
+      card.innerHTML = `
+        <div class="trip-header">
+          <span style="font-weight:800; color:var(--primary-navy);">${b.bookingId || key}</span>
+          <span class="${isPaid ? 'badge-paid' : 'badge-due'}">
+            ${isPaid ? '✅ पूर्ण जमा (Paid)' : '⏳ बाकी येणे (Due)'}
+          </span>
+        </div>
+        <div style="font-size:0.92rem; color:var(--text-muted);">
+          <p>👤 <strong>${b.name || '-'}</strong> | 📞 <strong class="eng-num">${b.phone || '-'}</strong></p>
+          <p>📍 ${b.routeFrom || '-'} ➡️ ${b.routeTo || '-'}</p>
+          <p>🚗 <strong>${b.vehicle || b.carNumber || '-'}</strong> | 📅 ${b.tripDate || '-'}</p>
+          <p style="margin-top:4px;">
+            💰 भाडे: <strong class="eng-num" style="color:var(--primary-navy);">${fareStr}</strong> | 
+            💵 जमा: <strong class="eng-num" style="color:var(--success-green);">${jamaStr}</strong> | 
+            💳 बाकी: <strong class="eng-num" style="color:var(--danger-red);">${isPaid ? '₹ 0' : bakiStr}</strong>
+          </p>
+        </div>
+        <div class="trip-row-actions">
+          <button type="button" class="btn-action-sm btn-clear" onclick="oneClickSettlePayment('${key}', ${!isPaid})">
+            ${isPaid ? '<i class="fa-solid fa-rotate-left"></i> बाकी करा' : '<i class="fa-solid fa-circle-check"></i> सर्व बाकी जमा'}
+          </button>
+          <button type="button" class="btn-action-sm btn-edit-pay" onclick="openPaymentModal('${key}')">
+            <i class="fa-solid fa-pen-to-square"></i> रक्कम बदला
+          </button>
+          ${!isPaid ? `
+          <button type="button" class="btn-action-sm btn-wa-remind" onclick="sendWhatsAppPaymentReminder('${key}')">
+            <i class="fa-brands fa-whatsapp"></i> बाकी मेसेज
+          </button>` : ''}
+        </div>
+      `;
+      return card;
+    }
+
+    // १-क्लिक बाकी जमा किंवा पूर्ववत करणे
+    function oneClickSettlePayment(key, setPaid) {
+      if (!db) return;
+      const b = state.bookings[key];
+      if (!b) return;
+
+      const fareNum = parseInt(String(b.finalFare || b.totalFare || '0').replace(/[^0-9]/g, '')) || 0;
+
+      if (setPaid) {
+        db.ref(`bookings/${key}`).update({
+          isPaymentCleared: true,
+          jamaAmount: `₹ ${fareNum.toLocaleString('en-IN')}`,
+          bakiAmount: `₹ 0`
+        });
+        playChime(true);
+      } else {
+        const resetJama = 500;
+        const resetBaki = Math.max(0, fareNum - resetJama);
+        db.ref(`bookings/${key}`).update({
+          isPaymentCleared: false,
+          jamaAmount: `₹ ${resetJama.toLocaleString('en-IN')}`,
+          bakiAmount: `₹ ${resetBaki.toLocaleString('en-IN')}`
+        });
+      }
+    }
+
+    // मॉडेलद्वारे रक्कम अपडेट
+    function openPaymentModal(key) {
+      const b = state.bookings[key];
+      if (!b) return;
+
+      document.getElementById('modal-trip-key').value = key;
+      document.getElementById('modal-trip-id').textContent = b.bookingId || key;
+      document.getElementById('modal-cust-name').textContent = b.name || '-';
+      document.getElementById('modal-final-fare').textContent = b.finalFare || b.totalFare || '₹ 0';
+
+      const currentJamaNum = parseInt(String(b.jamaAmount || '0').replace(/[^0-9]/g, '')) || 0;
+      document.getElementById('modal-jama-input').value = currentJamaNum;
+      document.getElementById('payment-modal').classList.remove('hidden');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('payment-modal').classList.add('hidden');
+    }
+
+    function saveUpdatedPayment() {
+      const key = document.getElementById('modal-trip-key')?.value;
+      const b = state.bookings[key];
+      const newJama = parseInt(document.getElementById('modal-jama-input')?.value || '0') || 0;
+
+      if (!b || !db) return;
+
+      const fareNum = parseInt(String(b.finalFare || b.totalFare || '0').replace(/[^0-9]/g, '')) || 0;
+      const newBaki = Math.max(0, fareNum - newJama);
+      const isPaid = (newBaki === 0);
+
+      db.ref(`bookings/${key}`).update({
+        isPaymentCleared: isPaid,
+        jamaAmount: `₹ ${newJama.toLocaleString('en-IN')}`,
+        bakiAmount: `₹ ${newBaki.toLocaleString('en-IN')}`
+      });
+
+      playChime(true);
+      closePaymentModal();
+    }
+
+    // व्हॉट्सॲप बाकी रिमाइंड मेसेज
+    function sendWhatsAppPaymentReminder(key) {
+      const b = state.bookings[key];
+      if (!b) return;
+
+      const phone = (b.phone || '').replace(/[^0-9]/g, '');
+      if (!phone) {
+        alert("ग्राहकाचा मोबाईल नंबर उपलब्ध नाही.");
+        return;
+      }
+
+      const msg = `🚩 *|| श्री बाळूमामा प्रसन्न ||* 🚩\n` +
+        `✨ *बाळूमामा टूर्स आणि ट्रॅव्हल्स - सहल पेमेंट स्मरणपत्र* ✨\n` +
+        `────────────────────────\n` +
+        `नमस्कार *${b.name || 'ग्राहक'}* जी, 🙏\n` +
+        `आपल्या सहलीची भाडे बाकी नोंद खालीलप्रमाणे आहे:\n\n` +
+        `🆔 *बुकिंग आयडी:* ${b.bookingId || key}\n` +
+        `📍 *मार्ग:* ${b.routeFrom || '-'} ➡️ ${b.routeTo || '-'}\n` +
+        `📅 *तारीख:* ${b.tripDate || '-'}\n` +
+        `💰 *एकूण भाडे:* ${b.finalFare || b.totalFare || '₹ 0'}\n` +
+        `✅ *जमा रक्कम:* ${b.jamaAmount || '₹ 0'}\n` +
+        `⏳ *उर्वरित देय बाकी:* *${b.bakiAmount || '₹ 0'}*\n` +
+        `────────────────────────\n` +
+        `कृपया उर्वरित रक्कम लवकरात लवकर जमा करावी ही नम्र विनंती. 💛🙏\n` +
+        `धन्यवाद!\n` +
+        `*बाळूमामा टूर्स आणि ट्रॅव्हल्स*`;
+
+      window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    // व्ह्यू २: कॅलेंडर रेंडरिंग
+    function changeMonth(delta) {
+      state.calMonth += delta;
+      if (state.calMonth < 0) {
+        state.calMonth = 11;
+        state.calYear--;
+      } else if (state.calMonth > 11) {
+        state.calMonth = 0;
+        state.calYear++;
+      }
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendar-days-container');
+      const title = document.getElementById('cal-month-title');
+      if (!grid || !title) return;
+
+      grid.innerHTML = '';
+      title.textContent = `${marathiMonths[state.calMonth]} ${state.calYear}`;
+
+      const daysInMonth = new Date(state.calYear, state.calMonth + 1, 0).getDate();
+      const firstDayIndex = new Date(state.calYear, state.calMonth, 1).getDay();
+
+      for (let i = 0; i < firstDayIndex; i++) {
+        grid.appendChild(document.createElement('div'));
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-cell-day';
+        cell.textContent = d;
+
+        const dateStr = `${d} ${marathiMonths[state.calMonth]} ${state.calYear}`;
+
+        let hasPaid = false;
+        let hasBaki = false;
+
+        Object.keys(state.bookings || {}).forEach(k => {
+          const b = state.bookings[k];
+          if (b.status === 'cancelled') return;
+
+          if (b.tripDate && (b.tripDate.includes(dateStr) || (b.tripDate.includes(String(d)) && b.tripDate.includes(marathiMonths[state.calMonth])))) {
+            const bakiNum = parseInt(String(b.bakiAmount || '0').replace(/[^0-9]/g, '')) || 0;
+            if (b.isPaymentCleared || bakiNum === 0) {
+              hasPaid = true;
+            } else {
+              hasBaki = true;
+            }
+          }
+        });
+
+        if (hasBaki) cell.classList.add('has-baki');
+        else if (hasPaid) cell.classList.add('has-paid');
+
+        if (state.selectedDateStr === dateStr) {
+          cell.classList.add('selected');
+        }
+
+        cell.onclick = () => {
+          state.selectedDateStr = dateStr;
+          renderCalendar();
+          renderSelectedDateTrips();
+        };
+
+        grid.appendChild(cell);
+      }
+
+      if (!state.selectedDateStr) {
+        state.selectedDateStr = `${new Date().getDate()} ${marathiMonths[new Date().getMonth()]} ${new Date().getFullYear()}`;
+      }
+      renderSelectedDateTrips();
+    }
+
+    function renderSelectedDateTrips() {
+      const container = document.getElementById('cal-date-trips-list');
+      const title = document.getElementById('selected-date-title');
+      const dateStr = state.selectedDateStr;
+      if (!container || !dateStr) return;
+
+      if (title) title.innerHTML = `<i class="fa-solid fa-calendar-check" style="color:var(--accent-gold);"></i> तारीख: ${dateStr} चे ट्रिप पेमेंट्स`;
+
+      const [dDay, dMonth] = dateStr.split(' ');
+      const matchingKeys = Object.keys(state.bookings || {}).filter(k => {
+        const b = state.bookings[k];
+        if (b.status === 'cancelled') return false;
+
+        const match = b.tripDate && (b.tripDate.includes(dateStr) || (b.tripDate.includes(dDay) && b.tripDate.includes(dMonth)));
+        if (!match) return false;
+
+        // Status Filter
+        const bakiNum = parseInt(String(b.bakiAmount || '0').replace(/[^0-9]/g, '')) || 0;
+        const isPaid = (b.isPaymentCleared === true) || (bakiNum === 0);
+
+        if (state.statusFilter === 'due' && isPaid) return false;
+        if (state.statusFilter === 'paid' && !isPaid) return false;
+
+        return true;
+      });
+
+      if (matchingKeys.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); padding:10px;">या तारखेला कोणतीही ट्रिप किंवा देय बाकी नाही.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      matchingKeys.forEach(key => {
+        const b = state.bookings[key];
+        container.appendChild(createTripPaymentCard(key, b));
+      });
+    }
+
+    document.getElementById('pass-input')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') loginPortal();
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>
