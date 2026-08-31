@@ -1,0 +1,2642 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>बाळूमामा टूर्स आणि ट्रॅव्हल्स | Balumama Tours & Travels</title>
+  
+  <!-- Favicon / Logo -->
+  <link rel="icon" type="image/png" href="https://www.dropbox.com/scl/fi/hre9yos6r0pfnc8xjstlz/1787043134496.png?rlkey=kej6l3d66mod16vqpnotd2129&st=e2g9y5gr&raw=1">
+
+  <!-- Google Fonts: Noto Sans Devanagari -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons (v6.5.1) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Firebase SDKs (v9.23.0 Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <style>
+    /* ==========================================================================
+       १. थीम आणि रंगसंगती (Clean & Professional White Executive Portal Theme)
+    ========================================================================== */
+    :root {
+      --primary-navy: #0f2942;
+      --primary-dark: #0a1c2e;
+      --primary-light: #1e3a5f;
+      --primary-gradient: linear-gradient(135deg, #0f2942 0%, #1e3a5f 100%);
+      
+      --accent-gold: #d97706;
+      --accent-gold-light: #f59e0b;
+      --accent-gold-subtle: #fef3c7;
+      --accent-gold-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      
+      --bg-slate: #f8fafc;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --border-strong: #cbd5e1;
+      
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      
+      --success-green: #16a34a;
+      --success-bg: #dcfce7;
+      --danger-red: #dc2626;
+      --danger-bg: #fee2e2;
+      --info-blue: #0284c7;
+      --info-bg: #e0f2fe;
+
+      --font-marathi: 'Times New Roman', 'Noto Sans Devanagari', Times, serif;
+      --font-english: 'Times New Roman', Times, serif;
+      
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 10px -2px rgba(15, 41, 66, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 12px 20px -4px rgba(15, 41, 66, 0.09), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+      --shadow-card: 0 15px 30px -5px rgba(15, 41, 66, 0.08), 0 6px 12px -3px rgba(15, 41, 66, 0.04);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-marathi);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-slate);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .eng-num {
+      font-family: var(--font-english) !important;
+      letter-spacing: 0.5px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ==========================================================================
+       २. 3D व्हाईट अलर्ट पॉपअप (Interactive Modern Modal Box)
+    ========================================================================== */
+    .modal-3d-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .modal-3d-card {
+      background: #ffffff;
+      color: var(--text-main);
+      width: 100%;
+      max-width: 430px;
+      border-radius: 26px;
+      padding: 28px 22px 22px;
+      text-align: center;
+      box-shadow: var(--shadow-card), 0 20px 35px -5px rgba(0, 0, 0, 0.25);
+      border: 1.5px solid var(--border-color);
+      animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .modal-3d-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: var(--success-bg);
+      color: var(--success-green);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      margin: 0 auto 14px;
+      border: 2px solid #bbf7d0;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+    }
+
+    .modal-3d-icon.error {
+      background: var(--danger-bg);
+      color: var(--danger-red);
+      border-color: #fecaca;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+    }
+
+    .modal-3d-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--primary-navy);
+      margin-bottom: 6px;
+    }
+
+    .modal-3d-msg {
+      font-size: 0.96rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .btn-3d-ok {
+      background: var(--primary-navy);
+      color: #ffffff;
+      border: none;
+      min-width: 140px;
+      padding: 11px 26px;
+      border-radius: 12px;
+      font-size: 0.98rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(15, 41, 66, 0.25);
+      transition: all 0.15s ease;
+      display: inline-block;
+    }
+    .btn-3d-ok:hover {
+      background: var(--primary-light);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       ३. स्प्लॅश स्क्रीन (Super Excited & Royal Welcome)
+    ========================================================================== */
+    .splash-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 32px 16px;
+      background: radial-gradient(circle at 50% 20%, #1e3a5f 0%, #0f2942 60%, #0a1c2e 100%);
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .tagline-badge {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1.5px solid rgba(245, 158, 11, 0.7);
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent-gold-light);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.35);
+      display: inline-block;
+      letter-spacing: 0.5px;
+    }
+
+    .splash-content {
+      margin: auto 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 36px 24px;
+      border-radius: 28px;
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+
+    .logo-frame {
+      width: 135px;
+      height: 135px;
+      border-radius: 24px;
+      background: #ffffff;
+      padding: 6px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+      margin-bottom: 20px;
+      border: 3px solid var(--accent-gold-light);
+    }
+    .logo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 18px;
+    }
+
+    .splash-title-box h3 {
+      font-size: 1.5rem;
+      color: #ffffff;
+      font-weight: 900;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .splash-slogan {
+      font-size: 1.05rem;
+      color: var(--accent-gold-light);
+      margin-bottom: 28px;
+      font-weight: 700;
+    }
+
+    .btn-splash-enter {
+      background: var(--accent-gold-gradient);
+      color: #ffffff;
+      font-size: 1.3rem;
+      font-weight: 900;
+      padding: 14px 44px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(217, 119, 6, 0.45);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+    .btn-splash-enter:active {
+      transform: scale(0.97);
+    }
+
+    /* ==========================================================================
+       ४. Sticky Header (Professional Modern Bar)
+    ========================================================================== */
+    .top-sticky-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 70px;
+      background: var(--primary-navy);
+      border-bottom: 3px solid var(--accent-gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      box-shadow: var(--shadow-md);
+      color: #ffffff;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .nav-back-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .header-title-badge { display: flex; align-items: center; gap: 10px; }
+    .header-mini-logo { width: 38px; height: 38px; border-radius: 8px; border: 1.5px solid var(--accent-gold-light); object-fit: cover; }
+    .header-title-badge h2 { font-size: 1.2rem; color: #ffffff; font-weight: 900; }
+
+    .live-clock-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 6px 12px;
+      border-radius: 10px;
+      text-align: right;
+    }
+    .clock-day { font-size: 0.82rem; color: var(--accent-gold-light); font-weight: 800; }
+    .clock-datetime { font-size: 0.78rem; color: #ffffff; display: flex; gap: 6px; }
+
+    /* ==========================================================================
+       ५. मुख्य लेआउट व कार्ड्स (White Professional Portal Cards)
+    ========================================================================== */
+    .main-content-area {
+      flex: 1;
+      padding: 16px 16px 115px 16px;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .travel-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+
+    .page-header-box {
+      text-align: center;
+      margin-bottom: 18px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+    .page-header-box h2 {
+      color: var(--primary-navy);
+      font-size: 1.35rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .page-header-box p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .announcement-bar {
+      background: var(--accent-gold-subtle);
+      border: 1px solid #fde68a;
+      border-left: 4px solid var(--accent-gold);
+      border-radius: 12px;
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: #92400e;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    /* क्विक ट्रॅक बार */
+    .quick-track-card {
+      background: #ffffff;
+      border: 1.5px solid #bae6fd;
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .quick-track-input {
+      flex: 1;
+      border: 1.5px solid var(--border-strong);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      outline: none;
+      color: var(--text-main);
+    }
+    .quick-track-input:focus {
+      border-color: var(--info-blue);
+    }
+    .btn-quick-track {
+      background: var(--info-blue);
+      color: #ffffff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* गॅलरी (Updated: 1 Image View + Big Height + Snap) */
+    .section-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .section-title-row h3 {
+      font-size: 1.15rem;
+      color: var(--primary-navy);
+      font-weight: 900;
+    }
+    .swipe-hint {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .horizontal-scroll-gallery {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      border-radius: 18px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .horizontal-scroll-gallery::-webkit-scrollbar {
+      display: none;
+    }
+    .gallery-card {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 260px;
+      position: relative;
+      scroll-snap-align: start;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1.5px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+    }
+    .gallery-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .gallery-card:hover img {
+      transform: scale(1.02);
+    }
+    .gallery-badge {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      text-align: center;
+      color: #ffffff;
+      font-weight: 700;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* Fullscreen Modal Styles */
+    .image-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 20, 30, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .fullscreen-modal-img {
+      max-width: 96%;
+      max-height: 80vh;
+      border-radius: 16px;
+      object-fit: contain;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .btn-close-fs {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #ffffff;
+      font-size: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-close-fs:hover {
+      background: rgba(255, 255, 255, 0.35);
+      transform: scale(1.05);
+    }
+    .fullscreen-caption {
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-top: 14px;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    }
+
+    /* मुख्य ४ बटणे (Executive Nav Cards) */
+    .main-buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .btn-nav-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .btn-nav-card:active {
+      transform: scale(0.99);
+      border-color: var(--primary-navy);
+    }
+    .btn-nav-card.highlight {
+      border-color: var(--accent-gold);
+      background: #fffbeb;
+    }
+
+    .nav-icon-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.45rem;
+      margin-right: 14px;
+      flex-shrink: 0;
+    }
+    .bg-blue { background: var(--info-bg); color: var(--info-blue); }
+    .bg-purple { background: #f3e8ff; color: #7e22ce; }
+    .bg-orange { background: #ffedd5; color: #c2410c; }
+    .bg-gold { background: var(--accent-gold-subtle); color: var(--accent-gold); }
+
+    .nav-card-text h3 {
+      font-size: 1.2rem;
+      color: var(--primary-navy);
+      font-weight: 900;
+      margin-bottom: 2px;
+    }
+    .nav-card-text p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .nav-arrow {
+      margin-left: auto;
+      color: var(--text-light);
+      font-size: 1.15rem;
+    }
+    .badge-primary {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      background: var(--accent-gold);
+      color: #ffffff;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    /* ताफा */
+    .fleet-item-box {
+      background: var(--bg-slate);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .fleet-item-info h4 {
+      color: var(--primary-navy);
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .veh-no-pill {
+      background: var(--primary-navy);
+      color: #ffffff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      margin-left: 6px;
+    }
+    .status-pill {
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .status-pill.avail { background: var(--success-bg); color: var(--success-green); }
+    .status-pill.unavail { background: var(--danger-bg); color: var(--danger-red); }
+
+    /* पॅकेजेस सूची */
+    .packages-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .package-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+    .pkg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .pkg-header h4 {
+      font-size: 1.15rem;
+      color: var(--primary-navy);
+      font-weight: 900;
+    }
+    .pkg-duration-pill {
+      background: var(--info-bg);
+      color: var(--info-blue);
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .pkg-route {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 12px;
+    }
+    .pkg-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-color);
+      padding-top: 12px;
+    }
+    .pkg-price {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--primary-navy);
+    }
+    .btn-book-pkg {
+      background: var(--accent-gold);
+      color: #ffffff;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ==========================================================================
+       ६. बुकिंग विझार्ड स्टेप्स (Alarm-Style Clock Time Picker)
+    ========================================================================== */
+    .steps-tracker {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: 18px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .step-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.45;
+    }
+    .step-dot span {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-slate);
+      border: 2px solid var(--border-strong);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .step-dot label {
+      font-size: 0.75rem;
+      margin-top: 4px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .step-dot.active {
+      opacity: 1;
+    }
+    .step-dot.active span {
+      background: var(--primary-navy);
+      color: #ffffff;
+      border-color: var(--primary-navy);
+    }
+    .step-dot.active label {
+      color: var(--primary-navy);
+      font-weight: 800;
+    }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border-color);
+      margin: 0 8px 16px 8px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+    .form-group label {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--primary-navy);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .travel-input {
+      background: #ffffff;
+      border: 1.5px solid var(--border-strong);
+      color: var(--text-main);
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      width: 100%;
+    }
+    .travel-input:focus {
+      border-color: var(--primary-navy);
+    }
+
+    .travel-input[type="time"] {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary-navy);
+      cursor: pointer;
+    }
+
+    .trip-type-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .toggle-btn {
+      padding: 11px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--text-main);
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    .toggle-btn.active {
+      background: var(--primary-navy);
+      color: #ffffff;
+      border-color: var(--primary-navy);
+    }
+
+    .btn-add-stop {
+      background: var(--accent-gold-subtle);
+      border: 1.5px dashed var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+      margin-bottom: 16px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .autocomplete-dropdown {
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: #ffffff; border: 1.5px solid var(--primary-navy);
+      border-radius: 12px; max-height: 240px; overflow-y: auto; z-index: 50;
+      margin-top: 4px; box-shadow: var(--shadow-lg);
+    }
+    .suggestion-item {
+      padding: 11px 14px;
+      font-size: 0.92rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+    .suggestion-item:hover {
+      background: #f1f5f9;
+      color: var(--primary-navy);
+      font-weight: 700;
+    }
+
+    .distance-info-badge {
+      background: var(--info-bg);
+      border: 1.5px solid #bae6fd;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      color: var(--primary-navy);
+      font-weight: 700;
+    }
+
+    /* कॅलेंडर */
+    .cal-month-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-weight: 900;
+      color: var(--primary-navy);
+      font-size: 1.15rem;
+    }
+    .cal-nav-btn {
+      background: var(--bg-slate);
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--primary-light);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .cal-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+    .cal-day-cell {
+      aspect-ratio: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      font-family: var(--font-english);
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      font-weight: 700;
+    }
+    .cal-day-cell.available { background: #f0fdf4; color: var(--success-green); border-color: #bbf7d0; }
+    .cal-day-cell.booked { background: #fef2f2; color: var(--danger-red); border-color: #fecaca; cursor: not-allowed; }
+    .cal-day-cell.selected { background: var(--primary-navy) !important; color: #ffffff !important; font-weight: 900; border-color: var(--primary-navy); }
+
+    /* भाडे हिशोब व पेमेंट */
+    .fare-breakdown-card {
+      background: var(--bg-slate);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .fare-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .fare-row strong { color: var(--text-main); }
+    .fare-total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--primary-navy);
+      border-top: 1.5px solid var(--border-color);
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    .payment-options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .pay-opt-card {
+      background: #ffffff;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 14px;
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pay-opt-card.active {
+      border-color: var(--primary-navy);
+      background: var(--accent-gold-subtle);
+    }
+    .pay-opt-card input[type="radio"] {
+      accent-color: var(--primary-navy);
+      width: 18px;
+      height: 18px;
+    }
+
+    .jama-baki-card {
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+    .jama-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.98rem; }
+    .baki-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--primary-navy);
+      border-top: 1px dashed #86efac;
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+
+    .upi-qr-card {
+      text-align: center;
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .qr-frame {
+      display: inline-block;
+      padding: 8px;
+      background: #ffffff;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 14px;
+      margin: 8px 0;
+    }
+    .qr-frame img { width: 150px; height: 150px; display: block; border-radius: 8px; }
+
+    .btn-row-dual { display: flex; gap: 12px; margin-top: 20px; }
+    .btn-next-step, .btn-confirm-booking {
+      flex: 1;
+      background: var(--primary-navy);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-prev-step {
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1.5px solid var(--border-strong);
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       ७. Sticky Footer (WhatsApp Contacts)
+    ========================================================================== */
+    .bottom-sticky-footer {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+      background: var(--primary-navy);
+      border-top: 2px solid var(--accent-gold);
+      padding: 8px 16px;
+      color: #ffffff;
+    }
+    .footer-contacts-row { display: flex; gap: 10px; max-width: 600px; margin: 0 auto 6px auto; }
+    .contact-card {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      text-decoration: none;
+      color: #ffffff;
+    }
+    .contact-name { font-size: 0.85rem; font-weight: 700; display: block; }
+    .contact-num { font-size: 0.82rem; color: var(--accent-gold-light); font-weight: 800; }
+    .btn-wa-sm {
+      background: var(--success-green);
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .footer-trust-strip {
+      display: flex;
+      justify-content: space-around;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 3D White Modal Box -->
+  <div id="custom-3d-modal" class="modal-3d-overlay hidden">
+    <div class="modal-3d-card">
+      <div id="modal-3d-icon" class="modal-3d-icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h4 id="modal-3d-title" class="modal-3d-title">यशस्वी!</h4>
+      <div id="modal-3d-msg" class="modal-3d-msg">माहिती प्राप्त झाली.</div>
+      <button class="btn-3d-ok" onclick="close3DPopup()">समजले (OK)</button>
+    </div>
+  </div>
+
+  <!-- Fullscreen Lightbox Image Modal -->
+  <div id="image-fullscreen-modal" class="image-modal-overlay hidden" onclick="closeFullscreenImage()">
+    <button class="btn-close-fs" onclick="closeFullscreenImage()">&times;</button>
+    <img id="fullscreen-modal-img" class="fullscreen-modal-img" src="" alt="Full Screen Photo">
+    <div id="fullscreen-modal-title" class="fullscreen-caption"></div>
+  </div>
+
+  <!-- १. स्प्लॅश स्क्रीन -->
+  <section id="splash-screen" class="splash-container">
+    <div>
+      <span class="tagline-badge">‼️ प्रवास करत रहा, आयुष्य जगत रहा ‼️</span>
+    </div>
+
+    <div class="splash-content">
+      <div class="logo-frame">
+        <img src="https://www.dropbox.com/scl/fi/hre9yos6r0pfnc8xjstlz/1787043134496.png?rlkey=kej6l3d66mod16vqpnotd2129&st=e2g9y5gr&raw=1" alt="बाळूमामा टूर्स लोगो">
+      </div>
+
+      <div class="splash-title-box">
+        <h3>बाळूमामाच्या नावानं चांगभलं 💛</h3>
+      </div>
+
+      <p class="splash-slogan">सुखद प्रवास... अविस्मरणीय अनुभव !</p>
+
+      <button type="button" class="btn-splash-enter" onclick="enterApp()">
+        <i class="fa-solid fa-location-arrow"></i> चला फिरू
+      </button>
+    </div>
+
+    <div style="font-size:0.85rem; opacity:0.8;">
+      श्री क्षेत्र आदमापूर बाळूमामा कृपाशीर्वाद
+    </div>
+  </section>
+
+  <!-- २. Sticky Header -->
+  <header id="main-header" class="top-sticky-bar hidden">
+    <div class="header-left">
+      <button id="btn-back-home" class="nav-back-btn hidden" onclick="navigateTo('home')">
+        <i class="fa-solid fa-arrow-left"></i> मागे
+      </button>
+      <div class="header-title-badge">
+        <img src="https://www.dropbox.com/scl/fi/hre9yos6r0pfnc8xjstlz/1787043134496.png?rlkey=kej6l3d66mod16vqpnotd2129&st=e2g9y5gr&raw=1" alt="Logo" class="header-mini-logo">
+        <h2>जय बाळूमामा 💛</h2>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="live-clock-box">
+        <div class="clock-day" id="live-day">शुक्रवार</div>
+        <div class="clock-datetime">
+          <span id="live-date" class="eng-num">28 Aug 2026</span>
+          <span>|</span>
+          <span id="live-time" class="eng-num">12:00:00 PM</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ३. मुख्य ॲप कंटेनर -->
+  <main id="app-container" class="main-content-area hidden">
+
+    <!-- ३.१ होमपेज -->
+    <section id="view-home" class="page-view active">
+      
+      <div class="announcement-bar">
+        <i class="fa-solid fa-bullhorn" style="color:var(--accent-gold);"></i>
+        <marquee id="live-marquee" behavior="scroll" direction="left" scrollamount="6">
+          ✨ नवीन शोरूम अर्टिगा व टेम्पो ट्रॅव्हलर भाड्याने उपलब्ध ! | पिक अप व ड्रॉप आणि थेट अचूक भाडे मोजणी सुविधा ! ✨
+        </marquee>
+      </div>
+
+      <!-- Quick Track My Ride -->
+      <div class="quick-track-card">
+        <i class="fa-solid fa-satellite-dish" style="font-size:1.3rem; color:var(--info-blue);"></i>
+        <input type="text" id="quick-track-id" class="quick-track-input eng-num" placeholder="बुकिंग आयडी किंवा ट्रॅकर आयडी टाका (उदा. AV@00001)">
+        <button type="button" class="btn-quick-track" onclick="openTrackPage()"><i class="fa-solid fa-map-location-dot"></i> ट्रॅक करा</button>
+      </div>
+
+      <!-- गॅलरी (Updated: Big 1-Image View with Fullscreen Support) -->
+      <div class="travel-card">
+        <div class="section-title-row">
+          <h3><i class="fa-solid fa-images" style="color:var(--accent-gold);"></i> लोकप्रिय सहली व फोटो</h3>
+          <span class="swipe-hint">स्क्रोल करा ➔ (किंवा टॅप करा)</span>
+        </div>
+        <div class="horizontal-scroll-gallery" id="home-gallery-container"></div>
+      </div>
+
+      <!-- ४ मुख्य बटणे -->
+      <div class="main-buttons-grid">
+        <div class="btn-nav-card" onclick="navigateTo('monthly')">
+          <div class="nav-icon-circle bg-blue"><i class="fa-solid fa-calendar-days"></i></div>
+          <div class="nav-card-text"><h3>मासिक प्लॅन्स</h3><p>Monthly Tour Plans</p></div>
+          <i class="fa-solid fa-chevron-right nav-arrow"></i>
+        </div>
+
+        <div class="btn-nav-card" onclick="navigateTo('yearly')">
+          <div class="nav-icon-circle bg-purple"><i class="fa-solid fa-earth-americas"></i></div>
+          <div class="nav-card-text"><h3>वार्षिक प्लॅन्स</h3><p>Yearly & Vacation Plans</p></div>
+          <i class="fa-solid fa-chevron-right nav-arrow"></i>
+        </div>
+
+        <div class="btn-nav-card" onclick="navigateTo('occasion')">
+          <div class="nav-icon-circle bg-orange"><i class="fa-solid fa-champagne-glasses"></i></div>
+          <div class="nav-card-text"><h3>विशेष / सणवार सहली</h3><p>Special Occasions & Darshan</p></div>
+          <i class="fa-solid fa-chevron-right nav-arrow"></i>
+        </div>
+
+        <div class="btn-nav-card highlight" onclick="startCustomTripBuilder()">
+          <div class="nav-icon-circle bg-gold"><i class="fa-solid fa-route"></i></div>
+          <div class="nav-card-text"><h3>माझा प्लॅन (कस्टमाइज)</h3><p>Exact Highway Road KM Calculator</p></div>
+          <span class="badge-primary">मुख्य</span>
+          <i class="fa-solid fa-chevron-right nav-arrow"></i>
+        </div>
+      </div>
+
+      <!-- ताफा -->
+      <div class="travel-card">
+        <h3 style="color:var(--primary-navy); font-size:1.15rem; font-weight:800; margin-bottom: 12px;">
+          <i class="fa-solid fa-car-rear" style="color:var(--accent-gold);"></i> आमच्या उपलब्ध गाड्या (Fleet Details)
+        </h3>
+        <div id="home-fleet-container">
+          <p style="color:var(--text-muted); text-align:center;">वाहने लोड होत आहेत...</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ३.२ मासिक प्लॅन्स -->
+    <section id="view-monthly" class="page-view hidden">
+      <div class="page-header-box">
+        <h2><i class="fa-solid fa-calendar-check" style="color:var(--accent-gold);"></i> मासिक सहल योजना</h2>
+        <p>दर महिन्याला आयोजित होणाऱ्या नियमित व खात्रीशीर सहली</p>
+      </div>
+      <div class="packages-list" id="monthly-packages-container"></div>
+    </section>
+
+    <!-- ३.३ वार्षिक प्लॅन्स -->
+    <section id="view-yearly" class="page-view hidden">
+      <div class="page-header-box">
+        <h2><i class="fa-solid fa-earth-asia" style="color:var(--accent-gold);"></i> वार्षिक व सुट्टी विशेष सहली</h2>
+        <p>मोठ्या सुट्ट्या आणि लांब पल्ल्याच्या अविस्मरणीय सहली</p>
+      </div>
+      <div class="packages-list" id="yearly-packages-container"></div>
+    </section>
+
+    <!-- ३.४ सणवार व विशेष सहली -->
+    <section id="view-occasion" class="page-view hidden">
+      <div class="page-header-box">
+        <h2><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-gold);"></i> विशेष व सणवार सहली</h2>
+        <p>आदमापूर बाळूमामा दर्शन, वारी आणि सण उत्सव विशेष टूर्स</p>
+      </div>
+      <div class="packages-list" id="occasion-packages-container"></div>
+    </section>
+
+    <!-- ==========================================================================
+         ३.५ सर्वसमावेशक बुकिंग विझार्ड (गाव-टू-गाव + पारदर्शक हिशोब + जमा-बाकी)
+    ========================================================================== -->
+    <section id="view-myplan" class="page-view hidden">
+      <div class="page-header-box">
+        <h2 id="wizard-main-title"><i class="fa-solid fa-sliders" style="color:var(--accent-gold);"></i> सहल बुकिंग विझार्ड</h2>
+        <p id="wizard-sub-title">भारतातील सर्व लहान-मोठी गावे व शहरे निवडून थेट अचूक रस्ता अंतर व पारदर्शक भाडे मोजा</p>
+      </div>
+
+      <div class="steps-tracker">
+        <div class="step-dot active" id="dot-1"><span>1</span><label>मार्ग व गाडी</label></div>
+        <div class="step-line"></div>
+        <div class="step-dot" id="dot-2"><span>2</span><label>प्रवासी व वेळ</label></div>
+        <div class="step-line"></div>
+        <div class="step-dot" id="dot-3"><span>3</span><label>तारीख</label></div>
+        <div class="step-line"></div>
+        <div class="step-dot" id="dot-4"><span>4</span><label>पेमेंट व तिकीट</label></div>
+      </div>
+
+      <!-- स्टेप १: मार्ग, अंतर किंवा निवडलेले पॅकेज -->
+      <div id="step-1" class="wizard-step active">
+        <div class="travel-card">
+          <h3 style="color:var(--primary-navy); font-size:1.2rem; font-weight:800; margin-bottom:16px;" id="step1-title">
+            <i class="fa-solid fa-map-location-dot" style="color:var(--accent-gold);"></i> प्रवासाचा मार्ग आणि गाडी
+          </h3>
+
+          <div id="package-info-box" class="travel-card hidden" style="background:#f8fafc; border-color:var(--accent-gold);">
+            <h4 id="pkg-display-name" style="color:var(--primary-navy); font-size:1.15rem; margin-bottom:4px;">सहल पॅकेज</h4>
+            <p id="pkg-display-route" style="color:var(--text-muted); font-size:0.9rem; margin-bottom:8px;">📍 मार्ग: -</p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span id="pkg-display-duration" class="pkg-duration-pill">३ दिवस</span>
+              <strong id="pkg-display-rate" class="eng-num" style="color:var(--primary-navy); font-size:1.15rem;">₹ 3999 / व्यक्ती</strong>
+            </div>
+          </div>
+
+          <div id="custom-route-inputs">
+            <!-- 1-Way vs Round Trip -->
+            <div class="trip-type-toggle">
+              <button type="button" class="toggle-btn active" id="btn-oneway" onclick="setTripType('oneway')">
+                <i class="fa-solid fa-arrow-right-long"></i> एकेरी प्रवास (One-Way)
+              </button>
+              <button type="button" class="toggle-btn" id="btn-roundtrip" onclick="setTripType('roundtrip')">
+                <i class="fa-solid fa-arrows-rotate"></i> रिटर्न सहल (Round Trip)
+              </button>
+            </div>
+
+            <div class="form-group">
+              <label><i class="fa-solid fa-circle-dot" style="color:var(--success-green);"></i> कुठून (Starting Village / City / Pin Code):</label>
+              <input type="text" id="route-from" placeholder="भारतातील सुरुवातीचे गाव किंवा शहर टाईप करा..." class="travel-input" oninput="handlePlaceSearch(this, 'from-suggestions')" autocomplete="off">
+              <div id="from-suggestions" class="autocomplete-dropdown hidden"></div>
+            </div>
+
+            <div id="stops-container"></div>
+            <button type="button" class="btn-add-stop" onclick="addIntermediateStop()">
+              <i class="fa-solid fa-plus"></i> प्रवासात थांबा गाव (Stop Village) जोडा (+₹30)
+            </button>
+
+            <div class="form-group">
+              <label><i class="fa-solid fa-location-dot" style="color:var(--danger-red);"></i> कुठे (Destination Village / Tourist Place):</label>
+              <input type="text" id="route-to" placeholder="गंतव्य स्थान / गाव / शहर टाईप करा..." class="travel-input" oninput="handlePlaceSearch(this, 'to-suggestions')" autocomplete="off">
+              <div id="to-suggestions" class="autocomplete-dropdown hidden"></div>
+            </div>
+
+            <div id="distance-badge-box" class="distance-info-badge">
+              <span><i class="fa-solid fa-road" style="color:var(--accent-gold);"></i> अचूक रस्ता अंतर (Road Distance):</span>
+              <strong id="calc-distance-km" class="eng-num" style="color:var(--primary-navy); font-size:1.15rem;">0 KM</strong>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-taxi" style="color:var(--accent-gold);"></i> उपलब्ध गाडी निवडा (Vehicle Type):</label>
+            <select id="vehicle-type" class="travel-input" onchange="calculateEstimatedFare()"></select>
+          </div>
+
+          <div style="margin-top:20px;">
+            <button type="button" class="btn-next-step" style="width:100%;" onclick="goToStep(2)">
+              पुढील पायरी (Next) <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- स्टेप २: प्रवासी माहिती, अलार्म-स्टाईल घड्याळ वेळ व पत्ता -->
+      <div id="step-2" class="wizard-step hidden">
+        <div class="travel-card">
+          <h3 style="color:var(--primary-navy); font-size:1.2rem; font-weight:800; margin-bottom:16px;">
+            <i class="fa-solid fa-users" style="color:var(--accent-gold);"></i> प्रवासी माहिती व पिकअप तपशील
+          </h3>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-user-group" style="color:var(--accent-gold);"></i> एकूण प्रवासी संख्या (Mandatory):</label>
+            <input type="number" id="passenger-count" class="travel-input eng-num" min="1" max="50" value="4" placeholder="एकूण प्रवासी संख्या टाका (उदा. 4 किंवा 6)" oninput="calculateEstimatedFare()" required>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-user" style="color:var(--accent-gold);"></i> मुख्य प्रवाशाचे नाव (ऐच्छिक - Optional):</label>
+            <input type="text" id="cust-primary-name" placeholder="उदा. रमेश पाटील" class="travel-input">
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-phone" style="color:var(--success-green);"></i> मोबाईल नंबर (WhatsApp Number - Mandatory):</label>
+            <input type="tel" id="cust-phone" placeholder="उदा. 9876543210" class="travel-input eng-num" maxlength="10" required>
+          </div>
+
+          <!-- Alarm-Style Clock Time Picker -->
+          <div class="form-group">
+            <label><i class="fa-solid fa-clock" style="color:var(--accent-gold);"></i> पिकअप वेळ निवडा (Alarm Clock Style):</label>
+            <input type="time" id="cust-pickup-time" class="travel-input eng-num" value="06:00" required>
+            <span style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">घड्याळावर टॅप करून अचूक तास, मिनिट आणि AM/PM निवडा.</span>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-house-chimney" style="color:var(--accent-gold);"></i> पिकअप अचूक पत्ता / लँडमार्क:</label>
+            <input type="text" id="cust-pickup-address" placeholder="उदा. घराचा पत्ता किंवा गावातील मुख्य चौक" class="travel-input">
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-note-sticky" style="color:var(--accent-gold);"></i> विशेष सूचना किंवा प्रवाशांची नावे (Optional):</label>
+            <textarea id="cust-notes" placeholder="प्रवाशांची नावे किंवा विशेष सूचना टाका (उदा. कॅरियरवर सामान / लहान मुले)" class="travel-input" rows="2"></textarea>
+          </div>
+
+          <div class="btn-row-dual">
+            <button type="button" class="btn-prev-step" onclick="goToStep(1)"><i class="fa-solid fa-arrow-left"></i> मागे</button>
+            <button type="button" class="btn-next-step" onclick="goToStep(3)">तारीख निवडा (Next) <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- स्टेप ३: कॅलेंडर व तारीख निवड -->
+      <div id="step-3" class="wizard-step hidden">
+        <div class="travel-card">
+          <h3 style="color:var(--primary-navy); font-size:1.2rem; font-weight:800; margin-bottom:16px;">
+            <i class="fa-solid fa-calendar-days" style="color:var(--accent-gold);"></i> उपलब्ध तारीख निवडा
+          </h3>
+
+          <div class="travel-card" style="padding:14px; background:#f8fafc; border-color:var(--border-strong);">
+            <div class="cal-month-nav">
+              <button type="button" class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+              <span id="cal-month-name">ऑगस्ट 2026</span>
+              <button type="button" class="cal-nav-btn" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            <div class="cal-weekdays">
+              <span>रवि</span><span>सोम</span><span>मंगळ</span><span>बुध</span><span>गुरु</span><span>शुक्र</span><span>शनि</span>
+            </div>
+            <div class="cal-days-grid" id="calendar-days"></div>
+          </div>
+
+          <div class="travel-card" style="padding:10px 14px; display:flex; justify-content:space-between; align-items:center; background:#f8fafc;">
+            <span>निवडलेली तारीख:</span>
+            <strong id="display-selected-date" class="eng-num" style="color:var(--primary-navy); font-size:1.05rem;">अद्याप निवडलेली नाही</strong>
+          </div>
+
+          <div class="form-group" id="trip-days-group">
+            <label><i class="fa-solid fa-calendar-plus" style="color:var(--accent-gold);"></i> प्रवासाचे एकूण दिवस (Trip Duration):</label>
+            <select id="trip-days" class="travel-input" onchange="calculateEstimatedFare(); checkVehicleAvailabilityForSelectedDates();">
+              <option value="1">1 दिवस (One Day)</option>
+              <option value="2">2 दिवस (रात्री मुक्काम +₹100)</option>
+              <option value="3">3 दिवस (2 रात्री मुक्काम +₹200)</option>
+              <option value="4">4 दिवस</option>
+              <option value="5">5 दिवस</option>
+              <option value="7">7 दिवस</option>
+            </select>
+          </div>
+
+          <div class="btn-row-dual">
+            <button type="button" class="btn-prev-step" onclick="goToStep(2)"><i class="fa-solid fa-arrow-left"></i> मागे</button>
+            <button type="button" class="btn-next-step" onclick="goToStep(4)">पेमेंट व हिशोब (Next) <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- स्टेप ४: १००% पारदर्शक हिशोब व 'जमा-बाकी' पेमेंट -->
+      <div id="step-4" class="wizard-step hidden">
+        <div class="travel-card">
+          <h3 style="color:var(--primary-navy); font-size:1.2rem; font-weight:800; margin-bottom:16px;">
+            <i class="fa-solid fa-receipt" style="color:var(--accent-gold);"></i> १००% पारदर्शक भाडे हिशोब
+          </h3>
+
+          <!-- पारदर्शक भाडे हिशोब कार्ड -->
+          <div class="fare-breakdown-card">
+            <div class="fare-row">
+              <span>प्रवासाचे अंतर:</span>
+              <strong id="bill-km-display" class="eng-num">0 KM</strong>
+            </div>
+            <div class="fare-row">
+              <span>मूळ अंतर भाडे (<span id="bill-rate-text">KM × दर</span>):</span>
+              <strong id="bill-base-fare" class="eng-num">₹ 0</strong>
+            </div>
+            <div class="fare-row" id="row-stops-charge">
+              <span>प्रवासातील थांबे शुल्क (<span id="bill-stops-count">0</span> थांबे × ₹30):</span>
+              <strong id="bill-stops-total" class="eng-num">+ ₹ 0</strong>
+            </div>
+            <div class="fare-row" id="row-night-charge">
+              <span>रात्री मुक्काम शुल्क (<span id="bill-night-days">0</span> रात्र × ₹100):</span>
+              <strong id="bill-night-total" class="eng-num">+ ₹ 0</strong>
+            </div>
+            <div class="fare-row" style="font-size:0.85rem; color:var(--success-green);">
+              <span>इतर कोणताही अतिरिक्त किंवा छुपा खर्च:</span>
+              <strong>₹ 0 (शून्य)</strong>
+            </div>
+            <div class="fare-total-row">
+              <span>एकूण भाडे (Total Fare):</span>
+              <strong id="fare-total" class="eng-num">₹ 0</strong>
+            </div>
+          </div>
+
+          <!-- पेमेंट पद्धत निवडा -->
+          <div class="form-group">
+            <label><i class="fa-solid fa-wallet" style="color:var(--accent-gold);"></i> पेमेंट पद्धत निवडा (Choose Payment Mode):</label>
+            <div class="payment-options-grid">
+              <label class="pay-opt-card active" onclick="selectPayMode('advance')">
+                <input type="radio" name="pay-mode" value="advance" checked>
+                <div>
+                  <strong>💵 काही रक्कम ॲडव्हान्स (जमा) व उर्वरित बाकी कॅश</strong>
+                  <p style="font-size:0.8rem; color:var(--text-muted);">तुमच्या सोयीनुसार जमा करा व बाकी ड्रायव्हरला द्या</p>
+                </div>
+              </label>
+
+              <label class="pay-opt-card" onclick="selectPayMode('full')">
+                <input type="radio" name="pay-mode" value="full">
+                <div>
+                  <strong>💳 संपूर्ण १००% रक्कम ऑनलाइन भरा (Full Online)</strong>
+                  <p style="font-size:0.8rem; color:var(--text-muted);">Google Pay / PhonePe ने पूर्ण भाडे भरा</p>
+                </div>
+              </label>
+
+              <label class="pay-opt-card" onclick="selectPayMode('cash')">
+                <input type="radio" name="pay-mode" value="cash">
+                <div>
+                  <strong>🤝 संपूर्ण रक्कम प्रवासात रोख / कॅश द्या (100% Cash)</strong>
+                  <p style="font-size:0.8rem; color:var(--text-muted);">आत्ता काहीही भरण्याची गरज नाही</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- कस्टम ॲडव्हान्स इनपुट -->
+          <div id="advance-input-section" class="form-group">
+            <label>तुम्हाला किती रक्कम ॲडव्हान्स (जमा) करायची आहे? (₹):</label>
+            <input type="number" id="custom-advance-amount" class="travel-input eng-num" placeholder="उदा. 500, 1000 किंवा 2000" value="1000" oninput="recalculateJamaBaki()">
+          </div>
+
+          <!-- थेट जमा व बाकी हिशोब बॉक्स -->
+          <div class="jama-baki-card">
+            <div class="jama-row">
+              <span>💰 एकूण भाडे (Total Fare):</span>
+              <strong id="sum-total-fare" class="eng-num">₹ 0</strong>
+            </div>
+            <div class="jama-row" style="color:var(--success-green); font-weight:700;">
+              <span>💵 जमा रक्कम (Jama / Online Paid):</span>
+              <strong id="sum-jama-amount" class="eng-num">₹ 0</strong>
+            </div>
+            <div class="baki-row">
+              <span>💳 उर्वरित बाकी (Baki / Cash Due):</span>
+              <strong id="sum-baki-amount" class="eng-num">₹ 0</strong>
+            </div>
+          </div>
+
+          <!-- UPI QR Code -->
+          <div id="online-qr-section" class="upi-qr-card">
+            <p style="color:var(--primary-navy); font-weight:700; font-size:0.95rem;"><i class="fa-solid fa-qrcode"></i> GPay / PhonePe ने स्कॅन करून जमा रक्कम भरा</p>
+            <div class="qr-frame">
+              <img id="upi-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi%3A%2F%2Fpay%3Fpa%3D9970473238%40upi%26pn%3DBalumama%2520Travels%26am%3D1000%26cu%3DINR" alt="UPI QR Code">
+            </div>
+            <p style="font-size:0.9rem; color:var(--text-muted);">UPI ID: <strong class="eng-num" style="color:var(--primary-navy);">9970473238@upi</strong></p>
+            
+            <div class="form-group" style="margin-top:14px; text-align:left;">
+              <label><i class="fa-solid fa-receipt" style="color:var(--accent-gold);"></i> पेमेंटचा १२-अंकी UPI UTR / ट्रान्झॅक्शन नंबर टाका:</label>
+              <input type="text" id="upi-utr-input" class="travel-input eng-num" placeholder="उदा. 423871928374">
+            </div>
+          </div>
+
+          <div class="btn-row-dual">
+            <button type="button" class="btn-prev-step" onclick="goToStep(3)"><i class="fa-solid fa-arrow-left"></i> मागे</button>
+            <button type="button" class="btn-confirm-booking" onclick="submitBookingAndSendWhatsApp()">
+              <i class="fa-brands fa-whatsapp"></i> बुकिंग पूर्ण करा व तिकीट मिळवा
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ४. Sticky Footer -->
+  <footer id="main-footer" class="bottom-sticky-footer hidden">
+    <div class="footer-contacts-row">
+      <a href="https://wa.me/919970473238?text=नमस्कार,%20मला%20बाळूमामा%20टूर्स%20बद्दल%20चौकशी%20करायची%20आहे." target="_blank" class="contact-card" id="lnk-wa-1">
+        <div>
+          <span class="contact-name">संग्राम खोचे</span>
+          <span class="contact-num eng-num"><i class="fa-brands fa-whatsapp"></i> 9970473238</span>
+        </div>
+        <div class="btn-wa-sm"><i class="fa-brands fa-whatsapp"></i></div>
+      </a>
+
+      <a href="https://wa.me/917385123319?text=नमस्कार,%20मला%20बाळूमामा%20टूर्स%20बद्दल%20चौकशी%20करायची%20आहे." target="_blank" class="contact-card" id="lnk-wa-2">
+        <div>
+          <span class="contact-name">शरद माने</span>
+          <span class="contact-num eng-num"><i class="fa-brands fa-whatsapp"></i> 7385123319</span>
+        </div>
+        <div class="btn-wa-sm"><i class="fa-brands fa-whatsapp"></i></div>
+      </a>
+    </div>
+
+    <div class="footer-trust-strip">
+      <span>🛡️ सुरक्षित प्रवास</span>
+      <span>🤝 १००% पारदर्शक दर</span>
+      <span>⭐ ग्राहक समाधान</span>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       ५. संपूर्ण JavaScript Engine (AV@00001 Format + Alarm Time Picker + Gallery)
+  ========================================================================== -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmLtQpzKq2wFg0nDZzAZyAXelGK_oNHGk",
+      authDomain: "balumama-travels.firebaseapp.com",
+      projectId: "balumama-travels",
+      storageBucket: "balumama-travels.firebasestorage.app",
+      messagingSenderId: "787861406325",
+      appId: "1:787861406325:web:f31b27bcae1cd44baaee3c",
+      measurementId: "G-N8VYSNG0VX"
+    };
+
+    let db = null;
+    try {
+      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+      } else if (typeof firebase !== 'undefined' && firebase.apps.length) {
+        db = firebase.database();
+      }
+    } catch (e) {
+      console.warn("Firebase initialization skipped or offline:", e);
+    }
+
+    const state = {
+      currentView: 'splash',
+      bookingMode: 'custom',
+      tripType: 'oneway',
+      selectedPackage: null,
+      selectedDate: null,
+      selectedDays: 1,
+      calculatedKm: 0,
+      baseOneWayKm: 0,
+      totalCalculatedFare: 0,
+      selectedPayMode: 'advance',
+      vehiclesMap: {},
+      rawPackagesList: [],
+      bookedDatesList: [],
+      bookedVehiclesSchedule: {},
+      adminPhone1: '9970473238',
+      adminPhone2: '7385123319',
+      calYear: 2026,
+      calMonth: 7 // August (0-indexed)
+    };
+
+    let popupCallback = null;
+
+    function show3DPopup(title, message, type = 'success', callback = null) {
+      const modal = document.getElementById('custom-3d-modal');
+      const iconEl = document.getElementById('modal-3d-icon');
+      const titleEl = document.getElementById('modal-3d-title');
+      const msgEl = document.getElementById('modal-3d-msg');
+
+      if (!modal || !iconEl || !titleEl || !msgEl) return;
+
+      titleEl.textContent = title;
+      msgEl.innerHTML = message;
+      popupCallback = callback;
+
+      iconEl.className = 'modal-3d-icon ' + type;
+      if (type === 'error') {
+        iconEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+      } else {
+        iconEl.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function close3DPopup() {
+      const modal = document.getElementById('custom-3d-modal');
+      if (modal) modal.classList.add('hidden');
+      if (typeof popupCallback === 'function') {
+        const cb = popupCallback;
+        popupCallback = null;
+        cb();
+      }
+    }
+
+    /* Fullscreen Modal Functions */
+    function openFullscreenImage(url, title) {
+      const modal = document.getElementById('image-fullscreen-modal');
+      const img = document.getElementById('fullscreen-modal-img');
+      const titleEl = document.getElementById('fullscreen-modal-title');
+      if (!modal || !img || !titleEl) return;
+      img.src = url;
+      titleEl.textContent = title;
+      modal.classList.remove('hidden');
+    }
+
+    function closeFullscreenImage() {
+      const modal = document.getElementById('image-fullscreen-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function openTrackPage() {
+      const id = document.getElementById('quick-track-id')?.value.trim();
+      if (!id) {
+        show3DPopup("आयडी टाका", "कृपया तुमचा ५-अंकी बुकिंग आयडी (उदा. AV@00001) टाका.", "error");
+        return;
+      }
+      window.location.href = `tracker.html?id=${encodeURIComponent(id)}`;
+    }
+
+    function formatTime12Hour(timeStr) {
+      if (!timeStr) return "सकाळी ०६:०० (06:00 AM)";
+      const parts = timeStr.split(':');
+      if (parts.length < 2) return timeStr;
+      let hours = parseInt(parts[0], 10);
+      const minutes = parts[1];
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      let marathiTimePrefix = 'सकाळी';
+      if (hours >= 12 && hours < 16) marathiTimePrefix = 'दुपारी';
+      else if (hours >= 16 && hours < 20) marathiTimePrefix = 'संध्याकाळी';
+      else if (hours >= 20 || hours < 6) marathiTimePrefix = 'रात्री';
+      const hours12 = hours % 12 || 12;
+      return `${marathiTimePrefix} ${String(hours12).padStart(2, '0')}:${minutes} (${String(hours12).padStart(2, '0')}:${minutes} ${ampm})`;
+    }
+
+    // ==========================================================================
+    // २. ऑल इंडिया खेडी व गावे डेटाबेस
+    // ==========================================================================
+    const allIndiaCoreNodes = [
+      { name: "आदमापूर (बाळूमामा समाधी मंदिर)", lat: 16.3245, lng: 74.3211 },
+      { name: "कोल्हापूर (महालक्ष्मी अंबाबाई मंदिर)", lat: 16.7050, lng: 74.2433 },
+      { name: "जोतिबा देवस्थान (वाडी रत्नागिरी)", lat: 16.7972, lng: 74.1783 },
+      { name: "पन्हाळा किल्ला (Panhala Fort)", lat: 16.8122, lng: 74.1132 },
+      { name: "कणेरी मठ (सिद्धगिरी महासंस्थान)", lat: 16.6111, lng: 74.2667 },
+      { name: "नृसिंहवाडी (दत्त मंदिर नरसोबावाडी)", lat: 16.6917, lng: 74.6000 },
+      { name: "इचलकरंजी (Ichalkaranji / वस्त्रनगरी)", lat: 16.6917, lng: 74.4600 },
+      { name: "कागल (Kagal / गैबी चौक)", lat: 16.5772, lng: 74.3167 },
+      { name: "मुरगूड (Murgud)", lat: 16.3980, lng: 74.2500 },
+      { name: "बिद्री (Bidri)", lat: 16.4160, lng: 74.1950 },
+      { name: "गडहिंग्लज (Gadhinglaj)", lat: 16.2300, lng: 74.3500 },
+      { name: "आजरा (Ajara / रामतीर्थ धबधबा)", lat: 16.1167, lng: 74.2000 },
+      { name: "चंदगड (Chandgad / तिलारी घाट)", lat: 15.9333, lng: 74.3667 },
+      { name: "गारगोटी (Gargoti / भुदरगड)", lat: 16.3167, lng: 74.1500 },
+      { name: "राधानगरी (Radhanagari Dam)", lat: 16.4167, lng: 73.9833 },
+      { name: "गगनबावडा (Gaganbawda)", lat: 16.5400, lng: 73.8300 },
+      { name: "मलकापूर शाहूवाडी (Malkapur)", lat: 16.9000, lng: 73.9500 },
+      { name: "हातकणंगले (Hatkanangale)", lat: 16.7500, lng: 74.4333 },
+      { name: "शिरोळ (Shirol / जयसिंगपूर)", lat: 16.7333, lng: 74.6000 },
+      { name: "हुपरी (Hupari / चांदीची बाजारपेठ)", lat: 16.6167, lng: 74.4000 },
+      { name: "सांगली (Sangli City / मारुती चौक)", lat: 16.8524, lng: 74.5815 },
+      { name: "मिरज (Miraj Junction)", lat: 16.8272, lng: 74.6467 },
+      { name: "इस्लामपूर (Urun Islampur)", lat: 17.0500, lng: 74.2667 },
+      { name: "तासगाव (Tasgaon)", lat: 17.0333, lng: 74.6000 },
+      { name: "विटा (Vita / खानापूर)", lat: 17.2667, lng: 74.5333 },
+      { name: "आटपाडी (Atpadi)", lat: 17.4167, lng: 74.9500 },
+      { name: "जत (Jath)", lat: 17.0500, lng: 75.2167 },
+      { name: "कवठे महांकाळ (Kavathe Mahankal)", lat: 16.9833, lng: 74.8500 },
+      { name: "शिराळा (32 Shirala)", lat: 16.9833, lng: 74.1333 },
+      { name: "सातारा (Satara / कास पठार)", lat: 17.6805, lng: 74.0183 },
+      { name: "कऱ्हाड (Karad / प्रीतीसंगम)", lat: 17.2891, lng: 74.1812 },
+      { name: "महाबळेश्वर (Mahabaleshwar)", lat: 17.9237, lng: 73.6586 },
+      { name: "पाचगणी (Panchgani)", lat: 17.9237, lng: 73.8000 },
+      { name: "प्रतापगड (Pratapgad)", lat: 17.9333, lng: 73.5833 },
+      { name: "तापोळा (Tapola)", lat: 17.7667, lng: 73.7167 },
+      { name: "वाई (Wai)", lat: 17.9500, lng: 73.8833 },
+      { name: "फलटण (Phaltan)", lat: 17.9833, lng: 74.4333 },
+      { name: "रत्नागिरी (गणपतीपुळे)", lat: 17.1450, lng: 73.2650 },
+      { name: "मालवण (तारकर्ली)", lat: 16.0607, lng: 73.4705 },
+      { name: "कणकवली (Kankavli)", lat: 16.2700, lng: 73.7100 },
+      { name: "कुडाळ (Kudal)", lat: 16.0200, lng: 73.6900 },
+      { name: "सावंतवाडी (Sawantwadi)", lat: 15.9000, lng: 73.8200 },
+      { name: "आंबोली (Amboli Hill Station)", lat: 15.9614, lng: 73.9997 },
+      { name: "पुणे (Pune)", lat: 18.5204, lng: 73.8567 },
+      { name: "पिंपरी चिंचवड (Pimpri Chinchwad)", lat: 18.6279, lng: 73.8009 },
+      { name: "जेजुरी (Jejuri)", lat: 18.2833, lng: 74.1667 },
+      { name: "आळंदी (Alandi)", lat: 18.6775, lng: 73.8967 },
+      { name: "लोणावळा (Lonavala)", lat: 18.7557, lng: 73.4091 },
+      { name: "पंढरपूर (Pandharpur)", lat: 17.6775, lng: 75.3283 },
+      { name: "सोलापूर (Solapur)", lat: 17.6599, lng: 75.9064 },
+      { name: "अक्कलकोट (Akkalkot)", lat: 17.5255, lng: 76.2045 },
+      { name: "तुळजापूर (Tuljapur)", lat: 18.0108, lng: 76.0700 },
+      { name: "शिर्डी (Shirdi)", lat: 19.7667, lng: 74.4767 },
+      { name: "त्र्यंबकेश्वर ज्योतिर्लिंग", lat: 19.9333, lng: 73.5333 },
+      { name: "मुंबई (Mumbai)", lat: 19.0760, lng: 72.8777 },
+      { name: "बेळगाव (Belagavi)", lat: 15.8497, lng: 74.4977 },
+      { name: "निपाणी (Nipani)", lat: 16.4000, lng: 74.3833 },
+      { name: "संकेश्वर (Sankeshwar)", lat: 16.2600, lng: 74.4800 },
+      { name: "चिकोडी (Chikkodi)", lat: 16.4300, lng: 74.5900 },
+      { name: "गोवा (Panaji Goa)", lat: 15.4909, lng: 73.8278 },
+      { name: "तिरुपती बालाजी (Tirupati)", lat: 13.6288, lng: 79.4192 }
+    ];
+
+    const villageSubTypes = ["गाव (Main Village)", "बस स्टँड (Bus Stand)", "ग्रामपंचायत", "फाटा (Phata)", "चौक (Chowk)"];
+    const allIndiaPlaces = [...allIndiaCoreNodes];
+
+    allIndiaCoreNodes.forEach(node => {
+      villageSubTypes.forEach((type, idx) => {
+        const cleanName = node.name.split('(')[0].trim();
+        allIndiaPlaces.push({
+          name: `${cleanName} - ${type}`,
+          lat: Number((node.lat + (idx % 2 === 0 ? 0.008 : -0.008)).toFixed(4)),
+          lng: Number((node.lng + (idx % 2 === 0 ? 0.008 : -0.008)).toFixed(4))
+        });
+      });
+    });
+
+    let searchDebounceTimer = null;
+
+    function handlePlaceSearch(inputElem, dropdownId) {
+      const query = inputElem.value.trim();
+      const dropdown = document.getElementById(dropdownId);
+      if (!dropdown) return;
+
+      if (query.length < 2) {
+        dropdown.innerHTML = '';
+        dropdown.classList.add('hidden');
+        return;
+      }
+
+      dropdown.innerHTML = '<div style="padding:10px 14px; color:var(--primary-navy); font-size:0.88rem;"><i class="fa-solid fa-spinner fa-spin"></i> गावे शोधत आहे...</div>';
+      dropdown.classList.remove('hidden');
+
+      const localMatches = allIndiaPlaces.filter(p => p.name.toLowerCase().includes(query.toLowerCase())).slice(0, 6);
+
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=10&lat=19.75&lon=75.71`)
+          .then(res => res.json())
+          .then(data => {
+            dropdown.innerHTML = '';
+            const results = [];
+            localMatches.forEach(p => results.push({ name: p.name, lat: p.lat, lng: p.lng, isLocal: true }));
+
+            if (data && data.features) {
+              data.features.forEach(f => {
+                const props = f.properties;
+                const coords = f.geometry.coordinates;
+                if (props.countrycode === 'IN' || props.country === 'India' || !props.countrycode) {
+                  const placeName = [props.name, props.district || props.city, props.state].filter(Boolean).join(', ');
+                  if (!results.some(r => r.name.includes(props.name))) {
+                    results.push({ name: `📍 ${placeName}`, lat: coords[1], lng: coords[0], isLocal: false });
+                  }
+                }
+              });
+            }
+
+            if (results.length === 0) {
+              dropdown.innerHTML = '<div style="padding:10px 14px; color:var(--text-muted); font-size:0.88rem;">गाव सापडले नाही.</div>';
+              return;
+            }
+
+            results.slice(0, 10).forEach(place => {
+              const item = document.createElement('div');
+              item.className = 'suggestion-item';
+              item.innerHTML = `<i class="fa-solid fa-location-dot" style="color:${place.isLocal ? 'var(--success-green)' : 'var(--danger-red)'};"></i> <span>${place.name}</span>`;
+              item.onclick = () => {
+                inputElem.value = place.name.replace('📍 ', '');
+                inputElem.dataset.lat = place.lat;
+                inputElem.dataset.lng = place.lng;
+                dropdown.classList.add('hidden');
+                calculateTotalRouteDistance();
+              };
+              dropdown.appendChild(item);
+            });
+          })
+          .catch(() => {
+            dropdown.innerHTML = '';
+            localMatches.forEach(place => {
+              const item = document.createElement('div');
+              item.className = 'suggestion-item';
+              item.innerHTML = `<i class="fa-solid fa-location-dot" style="color:var(--success-green);"></i> <span>${place.name}</span>`;
+              item.onclick = () => {
+                inputElem.value = place.name;
+                inputElem.dataset.lat = place.lat;
+                inputElem.dataset.lng = place.lng;
+                dropdown.classList.add('hidden');
+                calculateTotalRouteDistance();
+              };
+              dropdown.appendChild(item);
+            });
+          });
+      }, 250);
+    }
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.form-group')) {
+        document.querySelectorAll('.autocomplete-dropdown').forEach(d => d.classList.add('hidden'));
+      }
+    });
+
+    function setTripType(type) {
+      state.tripType = type;
+      const btnOneWay = document.getElementById('btn-oneway');
+      const btnRoundTrip = document.getElementById('btn-roundtrip');
+      if (btnOneWay) btnOneWay.classList.toggle('active', type === 'oneway');
+      if (btnRoundTrip) btnRoundTrip.classList.toggle('active', type === 'roundtrip');
+      
+      if (type === 'roundtrip') {
+        state.calculatedKm = state.baseOneWayKm * 2;
+      } else {
+        state.calculatedKm = state.baseOneWayKm;
+      }
+      
+      const kmBadge = document.getElementById('calc-distance-km');
+      if (kmBadge) kmBadge.textContent = `${state.calculatedKm} KM (${type === 'roundtrip' ? 'रिटर्न अंतर' : 'एकेरी अंतर'})`;
+      calculateEstimatedFare();
+    }
+
+    async function calculateTotalRouteDistance() {
+      const fromInput = document.getElementById('route-from');
+      const toInput = document.getElementById('route-to');
+      const kmBadge = document.getElementById('calc-distance-km');
+
+      if (!fromInput || !toInput) return;
+
+      const points = [];
+      const lat1 = parseFloat(fromInput.dataset.lat), lng1 = parseFloat(fromInput.dataset.lng);
+      if (!isNaN(lat1) && !isNaN(lng1)) points.push({ lat: lat1, lng: lng1 });
+
+      document.querySelectorAll('#stops-container input[id^="stop-input-"]').forEach(input => {
+        const sLat = parseFloat(input.dataset.lat), sLng = parseFloat(input.dataset.lng);
+        if (!isNaN(sLat) && !isNaN(sLng)) points.push({ lat: sLat, lng: sLng });
+      });
+
+      const lat2 = parseFloat(toInput.dataset.lat), lng2 = parseFloat(toInput.dataset.lng);
+      if (!isNaN(lat2) && !isNaN(lng2)) points.push({ lat: lat2, lng: lng2 });
+
+      if (points.length < 2) {
+        if (kmBadge) kmBadge.textContent = "0 KM";
+        state.calculatedKm = 0;
+        state.baseOneWayKm = 0;
+        calculateEstimatedFare();
+        return;
+      }
+
+      if (kmBadge) kmBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> अंतर मोजत आहे...';
+
+      const coordsQuery = points.map(p => `${p.lng},${p.lat}`).join(';');
+      const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${coordsQuery}?overview=false`;
+
+      try {
+        const res = await fetch(osrmUrl);
+        const data = await res.json();
+        if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+          state.baseOneWayKm = Math.round(data.routes[0].distance / 1000) || 10;
+          state.calculatedKm = state.tripType === 'roundtrip' ? state.baseOneWayKm * 2 : state.baseOneWayKm;
+          if (kmBadge) kmBadge.textContent = `${state.calculatedKm} KM (${state.tripType === 'roundtrip' ? 'रिटर्न अंतर' : 'एकेरी अंतर'})`;
+        } else {
+          throw new Error("OSRM Error");
+        }
+      } catch (err) {
+        state.baseOneWayKm = 60;
+        state.calculatedKm = state.tripType === 'roundtrip' ? 120 : 60;
+        if (kmBadge) kmBadge.textContent = `${state.calculatedKm} KM`;
+      }
+      calculateEstimatedFare();
+    }
+
+    function addIntermediateStop() {
+      const container = document.getElementById('stops-container');
+      if (!container) return;
+      const stopIndex = container.children.length + 1;
+      const stopDiv = document.createElement('div');
+      stopDiv.className = 'form-group';
+      const stopInputId = `stop-input-${stopIndex}`;
+      const stopDropId = `stop-drop-${stopIndex}`;
+      
+      stopDiv.innerHTML = `
+        <label><i class="fa-solid fa-map-pin" style="color:var(--accent-gold);"></i> थांबा गाव ${stopIndex} (+₹30 शुल्क):</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="${stopInputId}" class="travel-input" placeholder="थांब्याचे गाव टाईप करा..." oninput="handlePlaceSearch(this, '${stopDropId}')" autocomplete="off" style="flex:1;">
+          <button type="button" class="btn-prev-step" style="padding:8px 14px;" onclick="this.parentElement.parentElement.remove(); calculateTotalRouteDistance();">❌</button>
+        </div>
+        <div id="${stopDropId}" class="autocomplete-dropdown hidden"></div>
+      `;
+      container.appendChild(stopDiv);
+      calculateEstimatedFare();
+    }
+
+    const defaultVehicles = {
+      v1: { name: "नवीन अर्टिगा AC", number: "MH-09-EQ-2503", seats: "6+1 Seater", kmRate: 14, dayRate: 3500, trackerId: "TRK-ERT-2503", available: true },
+      v2: { name: "टेम्पो ट्रॅव्हलर Luxury AC", number: "MH-09-TT-1111", seats: "17 Seater", kmRate: 24, dayRate: 6500, trackerId: "TRK-TT-1111", available: true },
+      v3: { name: "स्विफ्ट डिझायर AC", number: "MH-09-DZ-9999", seats: "4+1 Seater", kmRate: 12, dayRate: 2800, trackerId: "TRK-DZ-9999", available: true }
+    };
+
+    const defaultGallery = [
+      { title: "आदमापूर बाळूमामा", url: "https://www.dropbox.com/scl/fi/c1nxrjfvsubydjvmekwhn/Mama-WEBP.webp?rlkey=lbfwwf5nz8wm6c0at6lqcohao&st=aotc4ab9&raw=1" },
+      { title: "नवीन अर्टिगा", url: "https://www.dropbox.com/scl/fi/rz7q8g5uxpicechobtj11/FOR-SALE_2023-MARUTI-SUZUKI-ERTIGA-ZXI-PETROL-COMPANY-CNG-FIRST-OWNER-ONLY-14_000-KM-DRIVEN-GENUINE-_._._IF-YOU-HAVE-ANY-ENQUIRY-PLEASE-CALL-OR-WHATSAPP-_2.webp?rlkey=t7q4o86dhcjh9uyfwf0ci9x5x&st=rqp0gq8l&raw=1" },
+      { title: "किल्ले व निसर्ग सहल", url: "https://www.dropbox.com/scl/fi/e54a3g1dbcv2prw7brzc7/IMG_20260818_075818.png?rlkey=2mpd2ogrvolftzf6mpbelbh0x&st=w5rsj0h7&raw=1" },
+      { title: "समुद्रकिनारी सहल", url: "https://www.dropbox.com/scl/fi/sstqaiuqbdo0nd073z9ql/file_000000008f788211ae3a6ec10f6def31.png?rlkey=67h6b2xx8s37z4dd6vx9jj7wv&st=ke4npu5m&raw=1" },
+      { title: "वन डे पिकनिक", url: "https://www.dropbox.com/scl/fi/ls8y6n3413zz71zbke8rm/1787020414112.png?rlkey=4rys2cawrk79v4kylsypw31uo&st=1wkrfurc&raw=1" }
+    ];
+
+    const marathiMonths = ['जानेवारी', 'फेब्रुवारी', 'मार्च', 'एप्रिल', 'मे', 'जून', 'जुलै', 'ऑगस्ट', 'सप्टेंबर', 'ऑक्टोबर', 'नोव्हेंबर', 'डिसेंबर'];
+    const marathiDays = ['रविवार', 'सोमवार', 'मंगळवार', 'बुधवार', 'गुरुवार', 'शुक्रवार', 'शनिवार'];
+
+    function enterApp() {
+      const splash = document.getElementById('splash-screen');
+      const header = document.getElementById('main-header');
+      const appCont = document.getElementById('app-container');
+      const footer = document.getElementById('main-footer');
+
+      if (splash) splash.classList.add('hidden');
+      if (header) header.classList.remove('hidden');
+      if (appCont) appCont.classList.remove('hidden');
+      if (footer) footer.classList.remove('hidden');
+      navigateTo('home');
+    }
+
+    function navigateTo(viewName, pushHistory = true) {
+      state.currentView = viewName;
+      document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden'));
+
+      const target = document.getElementById(`view-${viewName}`);
+      if (target) {
+        target.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      const backBtn = document.getElementById('btn-back-home');
+      if (backBtn) backBtn.classList.toggle('hidden', viewName === 'home');
+
+      if (pushHistory) {
+        history.pushState({ view: viewName }, '', `?view=${viewName}`);
+      }
+    }
+
+    window.addEventListener('popstate', (e) => {
+      const v = (e.state && e.state.view) ? e.state.view : 'home';
+      navigateTo(v, false);
+    });
+
+    function updateLiveClock() {
+      const now = new Date();
+      const dayEl = document.getElementById('live-day');
+      const dateEl = document.getElementById('live-date');
+      const timeEl = document.getElementById('live-time');
+
+      if (dayEl) dayEl.textContent = marathiDays[now.getDay()];
+      if (dateEl) dateEl.textContent = `${now.getDate()} ${marathiMonths[now.getMonth()]} ${now.getFullYear()}`;
+      if (timeEl) {
+        let hours = now.getHours(), minutes = String(now.getMinutes()).padStart(2, '0'), seconds = String(now.getSeconds()).padStart(2, '0');
+        timeEl.textContent = `${hours % 12 || 12}:${minutes}:${seconds} ${hours >= 12 ? 'PM' : 'AM'}`;
+      }
+    }
+    setInterval(updateLiveClock, 1000);
+    updateLiveClock();
+
+    function syncVehiclesToUI(data) {
+      state.vehiclesMap = data || defaultVehicles;
+      const select = document.getElementById('vehicle-type');
+      const homeFleetCont = document.getElementById('home-fleet-container');
+      
+      if (select) select.innerHTML = '';
+      if (homeFleetCont) homeFleetCont.innerHTML = '';
+
+      const keys = Object.keys(state.vehiclesMap);
+      if (keys.length === 0) return;
+
+      keys.forEach(k => {
+        const v = state.vehiclesMap[k];
+        const isAvail = v.available !== false;
+
+        if (select) {
+          const opt = document.createElement('option');
+          opt.value = k;
+          opt.textContent = `${v.name} (${v.seats || '6+1 Seater'} - ₹${v.kmRate || 14}/KM) ${isAvail ? '✅' : '❌'}`;
+          opt.disabled = !isAvail;
+          select.appendChild(opt);
+        }
+
+        if (homeFleetCont) {
+          homeFleetCont.innerHTML += `
+            <div class="fleet-item-box">
+              <div class="fleet-item-info">
+                <h4>${v.name} <span class="veh-no-pill">${v.number || 'MH-XX-XX-XXXX'}</span></h4>
+                <p style="font-size:0.85rem; color:var(--text-muted);">💺 ${v.seats || '6+1 सीटर'} | 🛣️ ₹<span class="eng-num">${v.kmRate || 14}</span>/KM | ⏳ किमान ₹<span class="eng-num">${v.dayRate || 3500}</span>/दिवस</p>
+              </div>
+              <span class="status-pill ${isAvail ? 'avail' : 'unavail'}">${isAvail ? '✅ उपलब्ध' : '❌ देखभाल'}</span>
+            </div>
+          `;
+        }
+      });
+
+      calculateEstimatedFare();
+    }
+
+    function checkVehicleAvailabilityForSelectedDates() {
+      if (!state.selectedDate) return;
+      const days = parseInt(document.getElementById('trip-days')?.value || 1) || 1;
+      const select = document.getElementById('vehicle-type');
+      if (!select) return;
+
+      const baseDate = new Date(state.selectedDate);
+
+      Object.keys(state.vehiclesMap).forEach(k => {
+        const v = state.vehiclesMap[k];
+        let isBlocked = false;
+
+        for (let i = 0; i < days; i++) {
+          const checkDate = new Date(baseDate);
+          checkDate.setDate(baseDate.getDate() + i);
+          const dateStr = `${checkDate.getDate()} ${marathiMonths[checkDate.getMonth()]} ${checkDate.getFullYear()}`;
+
+          if (state.bookedVehiclesSchedule[k] && state.bookedVehiclesSchedule[k][dateStr]) {
+            isBlocked = true;
+            break;
+          }
+        }
+
+        const option = select.querySelector(`option[value="${k}"]`);
+        if (option) {
+          if (isBlocked) {
+            option.disabled = true;
+            option.textContent = `${v.name} (${v.seats}) ❌ (या तारखांना बुक झाली आहे)`;
+          } else {
+            option.disabled = v.available === false;
+            option.textContent = `${v.name} (${v.seats} - ₹${v.kmRate}/KM) ${v.available !== false ? '✅' : '❌'}`;
+          }
+        }
+      });
+    }
+
+    function startCustomTripBuilder() {
+      state.bookingMode = 'custom';
+      state.selectedPackage = null;
+      state.calculatedKm = 0;
+      state.baseOneWayKm = 0;
+
+      const mainTitle = document.getElementById('wizard-main-title');
+      const subTitle = document.getElementById('wizard-sub-title');
+      const step1Title = document.getElementById('step1-title');
+
+      if (mainTitle) mainTitle.innerHTML = `<i class="fa-solid fa-route" style="color:var(--accent-gold);"></i> माझा प्लॅन (Exact Highway Road KM Calculator)`;
+      if (subTitle) subTitle.textContent = 'भारतातील सर्व लहान-मोठी गावे व शहरे निवडून थेट अचूक रस्ता अंतर व पारदर्शक भाडे मोजा';
+      if (step1Title) step1Title.innerHTML = `<i class="fa-solid fa-map-location-dot" style="color:var(--accent-gold);"></i> प्रवासाचा मार्ग आणि गाडी`;
+
+      document.getElementById('package-info-box')?.classList.add('hidden');
+      document.getElementById('custom-route-inputs')?.classList.remove('hidden');
+      document.getElementById('trip-days-group')?.classList.remove('hidden');
+
+      navigateTo('myplan');
+      goToStep(1);
+      generateCalendarDays();
+      calculateEstimatedFare();
+    }
+
+    function startPackageBooking(pkgObj) {
+      state.bookingMode = 'package';
+      state.selectedPackage = pkgObj;
+
+      const mainTitle = document.getElementById('wizard-main-title');
+      const subTitle = document.getElementById('wizard-sub-title');
+      const step1Title = document.getElementById('step1-title');
+
+      if (mainTitle) mainTitle.innerHTML = `<i class="fa-solid fa-calendar-check" style="color:var(--accent-gold);"></i> सहल बुकिंग: ${pkgObj.title}`;
+      if (subTitle) subTitle.textContent = `कालावधी: ${pkgObj.duration || 'विशेष'} | मार्ग: ${pkgObj.route}`;
+      if (step1Title) step1Title.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--success-green);"></i> निवडलेले सहल पॅकेज व गाडी`;
+
+      const pkgName = document.getElementById('pkg-display-name');
+      const pkgRoute = document.getElementById('pkg-display-route');
+      const pkgDuration = document.getElementById('pkg-display-duration');
+      const pkgRate = document.getElementById('pkg-display-rate');
+
+      if (pkgName) pkgName.textContent = pkgObj.title;
+      if (pkgRoute) pkgRoute.textContent = `📍 मार्ग: ${pkgObj.route}`;
+      if (pkgDuration) pkgDuration.textContent = pkgObj.duration || 'सहल विशेष';
+      if (pkgRate) pkgRate.textContent = `₹ ${pkgObj.price} / व्यक्ती`;
+
+      document.getElementById('package-info-box')?.classList.remove('hidden');
+      document.getElementById('custom-route-inputs')?.classList.add('hidden');
+      document.getElementById('trip-days-group')?.classList.add('hidden');
+
+      navigateTo('myplan');
+      goToStep(1);
+      generateCalendarDays();
+      calculateEstimatedFare();
+    }
+
+    // ==========================================================================
+    // पारदर्शक भाडे राउंडिंग सूत्र (Smart Rounding: <50 -> 00, >=50 -> Next 100)
+    // ==========================================================================
+    function roundCabFare(rawAmount) {
+      if (!rawAmount || rawAmount <= 0) return 0;
+      const roundedNum = Math.round(rawAmount);
+      const remainder = roundedNum % 100;
+      if (remainder < 50) {
+        return roundedNum - remainder;
+      } else {
+        return roundedNum + (100 - remainder);
+      }
+    }
+
+    function calculateEstimatedFare() {
+      const passengerCount = parseInt(document.getElementById('passenger-count')?.value || 4) || 4;
+      const vKey = document.getElementById('vehicle-type')?.value || '';
+      const v = state.vehiclesMap[vKey];
+      const stopsCount = document.querySelectorAll('#stops-container input[id^="stop-input-"]').length;
+      const days = parseInt(document.getElementById('trip-days')?.value || 1) || 1;
+      state.selectedDays = days;
+
+      if (state.bookingMode === 'package' && state.selectedPackage) {
+        const pricePerPerson = parseInt(String(state.selectedPackage.price).replace(/[^0-9]/g, '')) || 0;
+        const rawFare = pricePerPerson * passengerCount;
+        state.totalCalculatedFare = roundCabFare(rawFare);
+
+        const billKm = document.getElementById('bill-km-display');
+        const billBase = document.getElementById('bill-base-fare');
+        const billRate = document.getElementById('bill-rate-text');
+        const rowStops = document.getElementById('row-stops-charge');
+        const rowNight = document.getElementById('row-night-charge');
+
+        if (billKm) billKm.textContent = `${passengerCount} व्यक्ती (पॅकेज)`;
+        if (billBase) billBase.textContent = `₹ ${state.totalCalculatedFare.toLocaleString('en-IN')}`;
+        if (billRate) billRate.textContent = `₹ ${pricePerPerson} / व्यक्ती`;
+        if (rowStops) rowStops.classList.add('hidden');
+        if (rowNight) rowNight.classList.add('hidden');
+      } else {
+        const kmRate = v ? (v.kmRate || 14) : 14;
+        const totalKm = state.calculatedKm || 0;
+        const baseFare = totalKm * kmRate;
+        const stopsCharge = stopsCount * 30;
+        const nightCharge = Math.max(0, days - 1) * 100;
+
+        const rawFare = baseFare + stopsCharge + nightCharge;
+        state.totalCalculatedFare = roundCabFare(rawFare);
+
+        const billKm = document.getElementById('bill-km-display');
+        const billRate = document.getElementById('bill-rate-text');
+        const billBase = document.getElementById('bill-base-fare');
+        const rowStops = document.getElementById('row-stops-charge');
+        const billStopsCount = document.getElementById('bill-stops-count');
+        const billStopsTotal = document.getElementById('bill-stops-total');
+        const rowNight = document.getElementById('row-night-charge');
+        const billNightDays = document.getElementById('bill-night-days');
+        const billNightTotal = document.getElementById('bill-night-total');
+
+        if (billKm) billKm.textContent = `${totalKm} KM`;
+        if (billRate) billRate.textContent = `${totalKm} KM × ₹${kmRate}/KM`;
+        if (billBase) billBase.textContent = `₹ ${baseFare.toLocaleString('en-IN')}`;
+
+        if (rowStops) {
+          rowStops.classList.remove('hidden');
+          if (billStopsCount) billStopsCount.textContent = stopsCount;
+          if (billStopsTotal) billStopsTotal.textContent = `+ ₹ ${stopsCharge}`;
+        }
+
+        if (rowNight) {
+          rowNight.classList.remove('hidden');
+          if (billNightDays) billNightDays.textContent = Math.max(0, days - 1);
+          if (billNightTotal) billNightTotal.textContent = `+ ₹ ${nightCharge}`;
+        }
+      }
+
+      const fareTotal = document.getElementById('fare-total');
+      const sumTotal = document.getElementById('sum-total-fare');
+
+      if (fareTotal) fareTotal.textContent = `₹ ${state.totalCalculatedFare.toLocaleString('en-IN')}`;
+      if (sumTotal) sumTotal.textContent = `₹ ${state.totalCalculatedFare.toLocaleString('en-IN')}`;
+
+      recalculateJamaBaki();
+    }
+
+    function selectPayMode(mode) {
+      state.selectedPayMode = mode;
+      document.querySelectorAll('.pay-opt-card').forEach(c => c.classList.remove('active'));
+      
+      const radio = document.querySelector(`input[name="pay-mode"][value="${mode}"]`);
+      if (radio) {
+        radio.checked = true;
+        const card = radio.closest('.pay-opt-card');
+        if (card) card.classList.add('active');
+      }
+
+      const advSec = document.getElementById('advance-input-section');
+      const qrSec = document.getElementById('online-qr-section');
+
+      if (mode === 'advance') {
+        if (advSec) advSec.classList.remove('hidden');
+        if (qrSec) qrSec.classList.remove('hidden');
+      } else if (mode === 'full') {
+        if (advSec) advSec.classList.add('hidden');
+        if (qrSec) qrSec.classList.remove('hidden');
+      } else {
+        if (advSec) advSec.classList.add('hidden');
+        if (qrSec) qrSec.classList.add('hidden');
+      }
+
+      recalculateJamaBaki();
+    }
+
+    function recalculateJamaBaki() {
+      let jama = 0;
+      const total = state.totalCalculatedFare || 0;
+
+      if (state.selectedPayMode === 'advance') {
+        const customAdv = parseInt(document.getElementById('custom-advance-amount')?.value || 1000) || 0;
+        jama = Math.min(total, Math.max(0, customAdv));
+      } else if (state.selectedPayMode === 'full') {
+        jama = total;
+      } else {
+        jama = 0;
+      }
+
+      const baki = Math.max(0, total - jama);
+
+      const sumJama = document.getElementById('sum-jama-amount');
+      const sumBaki = document.getElementById('sum-baki-amount');
+
+      if (sumJama) sumJama.textContent = `₹ ${jama.toLocaleString('en-IN')}`;
+      if (sumBaki) sumBaki.textContent = `₹ ${baki.toLocaleString('en-IN')}`;
+
+      if (jama > 0) {
+        const upiQr = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(`upi://pay?pa=9970473238@upi&pn=Balumama%20Travels&am=${jama}&cu=INR`)}`;
+        const qrImg = document.getElementById('upi-qr-img');
+        if (qrImg) qrImg.src = upiQr;
+      }
+    }
+
+    function goToStep(stepNum) {
+      if (stepNum === 2 && state.bookingMode === 'custom') {
+        const fromVal = document.getElementById('route-from')?.value.trim();
+        const toVal = document.getElementById('route-to')?.value.trim();
+        if (!fromVal || !toVal) {
+          show3DPopup("माहिती अपूर्ण", "कृपया कुठून आणि कुठे दोन्ही गावे किंवा ठिकाणे निवडा.", "error");
+          return;
+        }
+      }
+
+      if (stepNum === 3) {
+        const passCount = document.getElementById('passenger-count')?.value.trim();
+        const phone = document.getElementById('cust-phone')?.value.trim();
+        if (!passCount || parseInt(passCount) < 1) {
+          show3DPopup("प्रवासी संख्या", "कृपया एकूण प्रवासी संख्या टाका.", "error");
+          return;
+        }
+        if (!phone || phone.length < 10) {
+          show3DPopup("फोन नंबर तपासा", "कृपया १० अंकी योग्य व्हॉट्सॲप मोबाईल नंबर टाका.", "error");
+          return;
+        }
+      }
+
+      if (stepNum === 4 && !state.selectedDate) {
+        show3DPopup("तारीख निवडा", "कृपया कॅलेंडरमधून प्रवासाची तारीख निवडा.", "error");
+        return;
+      }
+
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`step-${i}`)?.classList.add('hidden');
+        document.getElementById(`dot-${i}`)?.classList.remove('active');
+      }
+
+      document.getElementById(`step-${stepNum}`)?.classList.remove('hidden');
+
+      for (let i = 1; i <= stepNum; i++) {
+        document.getElementById(`dot-${i}`)?.classList.add('active');
+      }
+
+      if (stepNum === 3) generateCalendarDays();
+      if (stepNum === 4) calculateEstimatedFare();
+      window.scrollTo({ top: 70, behavior: 'smooth' });
+    }
+
+    function changeMonth(delta) {
+      state.calMonth += delta;
+      if (state.calMonth < 0) {
+        state.calMonth = 11;
+        state.calYear--;
+      } else if (state.calMonth > 11) {
+        state.calMonth = 0;
+        state.calYear++;
+      }
+      generateCalendarDays();
+    }
+
+    function generateCalendarDays() {
+      const daysGrid = document.getElementById('calendar-days');
+      if (!daysGrid) return;
+      daysGrid.innerHTML = '';
+
+      const monthNameEl = document.getElementById('cal-month-name');
+      if (monthNameEl) monthNameEl.textContent = `${marathiMonths[state.calMonth]} ${state.calYear}`;
+
+      const daysInMonth = new Date(state.calYear, state.calMonth + 1, 0).getDate();
+      const firstDayIndex = new Date(state.calYear, state.calMonth, 1).getDay();
+
+      for (let i = 0; i < firstDayIndex; i++) {
+        const emptyCell = document.createElement('div');
+        daysGrid.appendChild(emptyCell);
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayCell = document.createElement('div');
+        dayCell.className = 'cal-day-cell';
+        dayCell.textContent = d;
+
+        const dateStr = `${d} ${marathiMonths[state.calMonth]} ${state.calYear}`;
+        const isBooked = Array.isArray(state.bookedDatesList) && (state.bookedDatesList.includes(d) || state.bookedDatesList.includes(dateStr));
+
+        if (isBooked) {
+          dayCell.classList.add('booked');
+        } else {
+          dayCell.classList.add('available');
+          if (state.selectedDate === dateStr) {
+            dayCell.classList.add('selected');
+          }
+          dayCell.onclick = () => {
+            document.querySelectorAll('.cal-day-cell').forEach(c => c.classList.remove('selected'));
+            dayCell.classList.add('selected');
+            state.selectedDate = dateStr;
+            const selDateEl = document.getElementById('display-selected-date');
+            if (selDateEl) selDateEl.textContent = state.selectedDate;
+            checkVehicleAvailabilityForSelectedDates();
+          };
+        }
+        daysGrid.appendChild(dayCell);
+      }
+    }
+
+    // ==========================================================================
+    // ६. AV@00001 ते AV@99999 आयडी + स्वयंचलित गाडी शेड्युल लॉक + थेट ट्रॅकिंग लिंक
+    // ==========================================================================
+    function submitBookingAndSendWhatsApp() {
+      const phone = document.getElementById('cust-phone')?.value.trim();
+      if (!phone || phone.length < 10) {
+        show3DPopup("फोन नंबर तपासा", "कृपया १० अंकी योग्य मोबाईल नंबर टाका.", "error");
+        return;
+      }
+
+      if (!state.selectedDate) {
+        show3DPopup("तारीख निवडा", "कृपया कॅलेंडरमधून तारीख निवडा.", "error");
+        return;
+      }
+
+      const utrNumber = document.getElementById('upi-utr-input')?.value.trim() || 'रोख (Cash Payment)';
+
+      if ((state.selectedPayMode === 'advance' || state.selectedPayMode === 'full') && (!utrNumber || utrNumber.includes('रोख'))) {
+        show3DPopup("UTR नंबर आवश्यक", "कृपया ऑनलाइन पेमेंटचा १२-अंकी UPI UTR / ट्रान्झॅक्शन नंबर टाका.", "error");
+        return;
+      }
+
+      const vKey = document.getElementById('vehicle-type')?.value || '';
+      const vObj = state.vehiclesMap[vKey];
+      const vehicleName = vObj ? `${vObj.name} (${vObj.number || ''})` : 'गाडी';
+      const trackerId = vObj ? (vObj.trackerId || vKey) : 'TRK-DEFAULT';
+      const passengerCount = document.getElementById('passenger-count')?.value || '4';
+      const totalFare = document.getElementById('fare-total')?.textContent || '₹ 0';
+      const jamaAmount = document.getElementById('sum-jama-amount')?.textContent || '₹ 0';
+      const bakiAmount = document.getElementById('sum-baki-amount')?.textContent || '₹ 0';
+
+      const customerName = document.getElementById('cust-primary-name')?.value.trim() || 'सन्माननीय ग्राहक';
+      const rawPickupTime = document.getElementById('cust-pickup-time')?.value.trim();
+      const pickupTime = formatTime12Hour(rawPickupTime);
+      const pickupAddress = document.getElementById('cust-pickup-address')?.value.trim() || '-';
+      const specialNotes = document.getElementById('cust-notes')?.value.trim() || 'काही नाही';
+
+      let fromPlace = '', toPlace = '', tripDays = `${state.selectedDays} दिवस`, distanceText = '';
+
+      if (state.bookingMode === 'package' && state.selectedPackage) {
+        fromPlace = `पॅकेज: ${state.selectedPackage.title}`;
+        toPlace = state.selectedPackage.route;
+        tripDays = state.selectedPackage.duration || 'विशेष';
+        distanceText = `${passengerCount} व्यक्ती (पॅकेज)`;
+      } else {
+        fromPlace = document.getElementById('route-from')?.value.trim() || '-';
+        toPlace = document.getElementById('route-to')?.value.trim() || '-';
+        distanceText = `${state.calculatedKm} KM (${state.tripType === 'roundtrip' ? 'रिटर्न' : 'एकेरी'})`;
+      }
+
+      const finalizeBooking = (formattedId) => {
+        const bookingData = {
+          bookingId: formattedId,
+          name: customerName,
+          phone: phone,
+          routeFrom: fromPlace,
+          routeTo: toPlace,
+          distanceKm: distanceText,
+          vehicle: vehicleName,
+          vehicleKey: vKey,
+          trackerId: trackerId,
+          tripDate: state.selectedDate,
+          days: tripDays,
+          passengersCount: passengerCount,
+          pickupTime: pickupTime,
+          pickupAddress: pickupAddress,
+          notes: specialNotes,
+          originalFare: totalFare,
+          totalFare: totalFare,
+          discountAmount: "₹ 0",
+          finalFare: totalFare,
+          jamaAmount: jamaAmount,
+          bakiAmount: bakiAmount,
+          utrNumber: utrNumber,
+          timestamp: new Date().toISOString(),
+          status: "pending"
+        };
+
+        if (db) {
+          try {
+            db.ref(`bookings/${formattedId}`).set(bookingData);
+
+            const baseDate = new Date(state.selectedDate);
+            for (let i = 0; i < state.selectedDays; i++) {
+              const lockDate = new Date(baseDate);
+              lockDate.setDate(baseDate.getDate() + i);
+              const lockDateStr = `${lockDate.getDate()} ${marathiMonths[lockDate.getMonth()]} ${lockDate.getFullYear()}`;
+              db.ref(`bookedVehiclesSchedule/${vKey}/${lockDateStr}`).set(true);
+            }
+          } catch(e) {
+            console.warn("Database write error:", e);
+          }
+        }
+
+        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+        const liveTrackingLink = `${baseUrl}/tracker.html?id=${encodeURIComponent(formattedId)}`;
+        const adminApprovalLink = `${baseUrl}/admin.html?approve=${encodeURIComponent(formattedId)}`;
+
+        const message = `🚩 *|| श्री बाळूमामा प्रसन्न ||* 🚩\n` +
+          `✨ *बाळूमामा टूर्स आणि ट्रॅव्हल्स - नवीन बुकिंग विनंती* ✨\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `🆔 *बुकिंग आयडी:* ${formattedId}\n` +
+          `👤 *ग्राहक नाव:* ${customerName}\n` +
+          `📞 *मोबाईल:* ${phone}\n` +
+          `📍 *प्रवास मार्ग:* ${fromPlace} ➡️ ${toPlace}\n` +
+          `🛣️ *तपशील:* ${distanceText}\n` +
+          `🚗 *गाडी:* ${vehicleName}\n` +
+          `🛰️ *ट्रॅकर आयडी:* ${trackerId}\n` +
+          `📅 *तारीख:* ${state.selectedDate}\n` +
+          `⏳ *कालावधी:* ${tripDays}\n` +
+          `👥 *एकूण प्रवासी:* ${passengerCount} व्यक्ती\n` +
+          `⏰ *पिकअप वेळ:* ${pickupTime}\n` +
+          `🏡 *पिकअप पत्ता:* ${pickupAddress}\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `💰 *१००% पारदर्शक भाडे हिशोब:*\n` +
+          `💵 *एकूण भाडे (Original Fare):* ${totalFare}\n` +
+          `🎁 *सवलत / डिस्काउंट (Discount):* ₹ 0 (ॲडमिनद्वारे ॲडजस्ट होईल)\n` +
+          `✅ *जमा रक्कम (Jama):* ${jamaAmount}\n` +
+          `💳 *उर्वरित बाकी (Baki):* ${bakiAmount}\n` +
+          `🧾 *UTR / पेमेंट नोंद:* ${utrNumber}\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `📍 *गाडी लाईव्ह ट्रॅकिंग लिंक (Live Tracking):*\n` +
+          `🔗 ${liveTrackingLink}\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `⚡ *ॲडमिन मंजुरी, डिस्काउंट व ड्रायव्हर नेमणूक थेट लिंक:*\n` +
+          `🔗 ${adminApprovalLink}\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `कृपया बुकिंग कन्फर्म करून तिकीट पाठवावे. 🙏`;
+
+        const whatsappUrl = `https://wa.me/91${state.adminPhone1}?text=${encodeURIComponent(message)}`;
+        
+        show3DPopup(
+          "बुकिंग यशस्वी! 🎉",
+          `<div style="font-size:1.15rem; font-weight:800; color:var(--primary-navy); margin-bottom:8px;">बुकिंग आयडी: ${formattedId}</div>` +
+          `<div style="font-size:0.95rem; color:var(--text-muted);">जमा: <strong>${jamaAmount}</strong> | बाकी: <strong>${bakiAmount}</strong></div>` +
+          `<div style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;">थेट व्हॉट्सॲपवर पाठवण्यासाठी 'समजले' वर क्लिक करा.</div>`,
+          "success",
+          () => {
+            window.open(whatsappUrl, '_blank');
+            navigateTo('home');
+          }
+        );
+      };
+
+      if (db) {
+        db.ref('bookingCounterPadded').transaction((currentCount) => {
+          return (currentCount || 0) + 1;
+        }, (error, committed, snapshot) => {
+          if (committed && snapshot) {
+            const countNum = snapshot.val();
+            const paddedId = String(countNum).padStart(5, '0');
+            finalizeBooking(`AV@${paddedId}`);
+          } else {
+            const randomNum = Math.floor(1 + Math.random() * 99999);
+            const fallbackId = `AV@${String(randomNum).padStart(5, '0')}`;
+            finalizeBooking(fallbackId);
+          }
+        });
+      } else {
+        const randomNum = Math.floor(1 + Math.random() * 99999);
+        const fallbackId = `AV@${String(randomNum).padStart(5, '0')}`;
+        finalizeBooking(fallbackId);
+      }
+    }
+
+    /* Updated Gallery Render & Auto-scroll System (20s Timer) */
+    function renderGallery(list) {
+      const cont = document.getElementById('home-gallery-container');
+      if (!cont) return;
+      cont.innerHTML = '';
+      (list || defaultGallery).forEach(img => {
+        const safeTitle = (img.title || '').replace(/'/g, "\\'");
+        const safeUrl = (img.url || '').replace(/'/g, "\\'");
+        cont.innerHTML += `
+          <div class="gallery-card" onclick="openFullscreenImage('${safeUrl}', '${safeTitle}')">
+            <img src="${img.url}" alt="${img.title}">
+            <div class="gallery-badge"><i class="fa-solid fa-expand"></i> ${img.title} (फुल स्क्रीनसाठी टॅप करा)</div>
+          </div>
+        `;
+      });
+    }
+
+    // Auto-Scroll Gallery Every 20 Seconds
+    setInterval(() => {
+      const cont = document.getElementById('home-gallery-container');
+      if (!cont || cont.children.length <= 1) return;
+      
+      const cardWidth = cont.offsetWidth;
+      if (cont.scrollLeft + cardWidth >= cont.scrollWidth - 15) {
+        cont.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        cont.scrollBy({ left: cardWidth, behavior: 'smooth' });
+      }
+    }, 20000);
+
+    function renderAllPackages(packagesData) {
+      state.rawPackagesList = packagesData || [];
+      ['monthly', 'yearly', 'occasion'].forEach(cat => {
+        const cont = document.getElementById(`${cat}-packages-container`);
+        if (!cont) return;
+        cont.innerHTML = '';
+        
+        const list = Object.keys(state.rawPackagesList)
+          .map(k => state.rawPackagesList[k])
+          .filter(p => p.category === cat);
+
+        if (list.length === 0) {
+          cont.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">सध्या कोणतीही पॅकेजेस उपलब्ध नाहीत.</p>';
+          return;
+        }
+        list.forEach(pkg => {
+          const pkgString = JSON.stringify(pkg).replace(/"/g, '&quot;');
+          cont.innerHTML += `
+            <div class="package-card">
+              <div class="pkg-header">
+                <span class="pkg-duration-pill">${pkg.duration || 'विशेष'}</span>
+                <h4>${pkg.title}</h4>
+              </div>
+              <p class="pkg-route"><i class="fa-solid fa-location-dot" style="color:var(--accent-gold);"></i> ${pkg.route}</p>
+              <div class="pkg-footer">
+                <div class="pkg-price">₹ <span class="eng-num">${pkg.price}</span> / व्यक्ती</div>
+                <button type="button" class="btn-book-pkg" onclick="startPackageBooking(${pkgString})">
+                  <i class="fa-solid fa-calendar-check"></i> बुक करा
+                </button>
+              </div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    // Firebase Realtime Bindings
+    if (db) {
+      db.ref('vehicles').on('value', s => syncVehiclesToUI(s.exists() ? s.val() : defaultVehicles));
+      db.ref('offerMessage').on('value', s => {
+        const marquee = document.getElementById('live-marquee');
+        if (marquee) marquee.textContent = s.exists() && s.val().trim() !== '' ? s.val() : '✨ नवीन शोरूम अर्टिगा व टेम्पो ट्रॅव्हलर भाड्याने उपलब्ध ! | पिक अप व ड्रॉप सुविधा ! ✨';
+      });
+      db.ref('blockedDates').on('value', s => {
+        if (s.exists()) {
+          state.bookedDatesList = Array.isArray(s.val()) ? s.val() : Object.values(s.val());
+          generateCalendarDays();
+        }
+      });
+      db.ref('bookedVehiclesSchedule').on('value', s => {
+        state.bookedVehiclesSchedule = s.exists() ? s.val() : {};
+        checkVehicleAvailabilityForSelectedDates();
+      });
+      db.ref('galleryImages').on('value', s => renderGallery(s.exists() ? Object.values(s.val()) : defaultGallery));
+      db.ref('tourPackages').on('value', s => renderAllPackages(s.exists() ? Object.values(s.val()) : {}));
+      db.ref('config').on('value', s => {
+        if (s.exists()) {
+          const cfg = s.val();
+          state.adminPhone1 = cfg.phone1 || '9970473238';
+          state.adminPhone2 = cfg.phone2 || '7385123319';
+          const w1 = document.getElementById('lnk-wa-1'), w2 = document.getElementById('lnk-wa-2');
+          if (w1) w1.href = `https://wa.me/91${state.adminPhone1}?text=नमस्कार,%20मला%20बाळूमामा%20टूर्स%20बद्दल%20चौकशी%20करायची%20आहे.`;
+          if (w2) w2.href = `https://wa.me/91${state.adminPhone2}?text=नमस्कार,%20मला%20बाळूमामा%20टूर्स%20बद्दल%20चौकशी%20करायची%20आहे.`;
+        }
+      });
+    } else {
+      syncVehiclesToUI(defaultVehicles);
+      renderGallery(defaultGallery);
+      renderAllPackages({});
+    }
+  </script>
+</body>
+</html>
