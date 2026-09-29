@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Our Private Space</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material-Symbols-Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen" class="auth-container">
+    <div class="auth-box">
+      <div class="whatsapp-logo">
+        <span class="material-symbols-outlined" style="font-size: 54px; color: #25D366;">chat</span>
+      </div>
+      <h2>Our Private Space</h2>
+      <p>Log in to continue</p>
+      <form id="login-form">
+        <input type="email" id="email" placeholder="Email" required autocomplete="username" />
+        <input type="password" id="password" placeholder="Password" required autocomplete="current-password" />
+        <button type="submit" id="login-btn">Log In</button>
+      </form>
+      <div id="auth-error" class="error-msg"></div>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER -->
+  <div id="app-screen" class="app-layout hidden">
+    <!-- TOP/SIDE NAVIGATION BAR -->
+    <header class="app-header">
+      <div class="user-info">
+        <div class="avatar" id="current-user-avatar">❤️</div>
+        <span id="current-user-label" class="username">My Love</span>
+      </div>
+      <div class="header-tabs">
+        <button class="tab-btn active" data-tab="chat">
+          <span class="material-symbols-outlined">chat</span> Chat
+        </button>
+        <button class="tab-btn" data-tab="status">
+          <span class="material-symbols-outlined">motion_photos_on</span> 24h Status
+        </button>
+        <button class="tab-btn" data-tab="vault">
+          <span class="material-symbols-outlined">folder</span> Notes & PDFs
+        </button>
+      </div>
+      <button id="logout-btn" title="Log Out" class="icon-btn">
+        <span class="material-symbols-outlined">logout</span>
+      </button>
+    </header>
+
+    <!-- TAB 1: CHAT -->
+    <section id="chat-tab" class="tab-content active">
+      <div class="chat-area" id="chat-messages">
+        <!-- Messages stream here dynamically -->
+      </div>
+      <form id="chat-form" class="chat-input-bar">
+        <label for="chat-file-input" class="icon-btn" title="Send Image or PDF">
+          <span class="material-symbols-outlined">attach_file</span>
+          <input type="file" id="chat-file-input" style="display:none;" />
+        </label>
+        <input type="text" id="chat-text-input" placeholder="Type a message..." autocomplete="off" />
+        <button type="submit" class="icon-btn send-btn" title="Send">
+          <span class="material-symbols-outlined">send</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- TAB 2: 24h STATUS / DISAPPEARING PHOTOS -->
+    <section id="status-tab" class="tab-content hidden">
+      <div class="status-header">
+        <div>
+          <h3>Daily Status (24 Hours)</h3>
+          <p>Photos disappear automatically after 1 day.</p>
+        </div>
+        <label for="status-file-input" class="status-upload-btn">
+          <span class="material-symbols-outlined">add_a_photo</span> Upload Story
+          <input type="file" id="status-file-input" accept="image/*" style="display:none;" />
+        </label>
+      </div>
+      <div class="stories-grid" id="stories-container">
+        <!-- Status stories stream here -->
+      </div>
+    </section>
+
+    <!-- TAB 3: NOTES & PDF VAULT -->
+    <section id="vault-tab" class="tab-content hidden">
+      <div class="vault-tools">
+        <div class="vault-note-box">
+          <textarea id="quick-note-input" placeholder="Write a shared note or memory..."></textarea>
+          <button id="save-note-btn">Pin Note</button>
+        </div>
+        <div class="vault-upload-box">
+          <label for="vault-file-input" class="status-upload-btn">
+            <span class="material-symbols-outlined">upload_file</span> Upload PDF / File
+            <input type="file" id="vault-file-input" accept=".pdf,image/*,.doc,.docx" style="display:none;" />
+          </label>
+        </div>
+      </div>
+      <div class="vault-list" id="vault-container">
+        <!-- Persistent items stream here -->
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
